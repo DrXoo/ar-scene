@@ -1,0 +1,7 @@
+{
+  "appId": "com.drxoo.armltest",
+  "appName": "ArMlTest",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "dist/ar-ml-test"
+}

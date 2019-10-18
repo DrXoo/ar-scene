@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CameraController } from './controllers/camera.controller';
 import { SceneManager } from './managers/scene.manager';
 
@@ -16,7 +16,9 @@ export class ArMlComponent implements OnInit {
   @ViewChild("canvasElement", {static: true})
   public canvasElement: ElementRef;
 
-  deviceNotReady: boolean = false;
+  @Output() onError: EventEmitter<string> = new EventEmitter();
+
+  deviceReady: any;
 
   private camera : CameraController = new CameraController();
   private sceneManager : SceneManager = new SceneManager();
@@ -27,11 +29,15 @@ export class ArMlComponent implements OnInit {
   }
 
   ngAfterViewInit(){
+    console.log("View Loaded");
     if(this.camera.canAccessCamera()){
+      console.log("Access camera");
+      this.deviceReady = true;
       this.camera.start(this.videoElement.nativeElement);
       this.sceneManager.createScene(this.canvasElement.nativeElement);
-    }else{
-      this.deviceNotReady = true;
+    }
+    else{
+      this.deviceReady = false;
     }
   }
 

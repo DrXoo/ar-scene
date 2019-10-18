@@ -1,7 +1,6 @@
-<ng-container *ngIf="!deviceNotReady">
-    <video #videoElement></video>
-    <canvas #canvasElement></canvas>
-</ng-container>
-<ng-container *ngIf="deviceNotReady">
-    No input device found.
-</ng-container>
+<P>VERSION 1.0</P>
+<p *ngIf=!deviceReady> No input device found. </p>
+
+<video #videoElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
+<canvas #canvasElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></canvas>
+

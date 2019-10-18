@@ -69,7 +69,8 @@ export class SceneManager {
 
 
     private updateCanvasSize(){
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        this.canvas.width = 640;
+        this.canvas.height = 480;
+        console.debug(window.innerWidth + " , " + window.innerHeight);
     }
 }
