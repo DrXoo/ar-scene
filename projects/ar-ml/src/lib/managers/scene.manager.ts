@@ -15,21 +15,18 @@ export class SceneManager {
     private mesh: Mesh;
     private scene: Scene;
     private camera: PerspectiveCamera;
-
-    private width() : number{
-        return this.canvas.width;
-    }
-    private height() : number{
-        return this.canvas.height;
-    }
+    private width: number;
+    private height: number;
 
     constructor(){
     }
 
-    public createScene(canvas : HTMLCanvasElement){
+    public createScene(canvas : HTMLCanvasElement, width : number, height : number){
         this.canvas = canvas;
+        this.width = width;
+        this.height = height;
         this.camera = new PerspectiveCamera(this.FOV,
-            this.width() / this.height(), 
+            this.width / this.height, 
             this.NEAREST_CAMERA_VALUE,
             this.FAREST_CAMERA_VALUE );
 
@@ -41,7 +38,7 @@ export class SceneManager {
         this.AddSampleBoxToScene();
 
         this.webGLRenderer = new WebGLRenderer( { canvas: this.canvas, antialias: true, alpha: true } );
-        this.webGLRenderer.setSize( this.width(), this.height() );
+        this.webGLRenderer.setSize( this.width, this.height );
         this.update();
     }
 
@@ -61,16 +58,15 @@ export class SceneManager {
     
         this.updateCanvasSize();
     
-        this.camera.aspect =  this.width() / this.height();
+        this.camera.aspect =  this.width / this.height;
         this.camera.updateProjectionMatrix();
     
-        this.webGLRenderer.setSize( this.width(), this.height() );
+        this.webGLRenderer.setSize( this.width, this.height );
     }
 
 
     private updateCanvasSize(){
-        this.canvas.width = 640;
-        this.canvas.height = 480;
-        console.debug(window.innerWidth + " , " + window.innerHeight);
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
     }
 }

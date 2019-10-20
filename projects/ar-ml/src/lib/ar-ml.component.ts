@@ -31,12 +31,19 @@ export class ArMlComponent implements OnInit {
   ngAfterViewInit(){
     if(this.camera.canAccessCamera()){
       this.deviceReady = true;
+
       this.camera.start(this.videoElement.nativeElement);
-      // this.sceneManager.createScene(this.canvasElement.nativeElement);
     }
     else{
       this.deviceReady = false;
     }
+  }
+
+  startScene(){
+    console.log("Res: "+this.videoElement.nativeElement.offsetWidth+","+this.videoElement.nativeElement.offsetHeight);
+    this.sceneManager.createScene(this.canvasElement.nativeElement,
+      this.videoElement.nativeElement.offsetWidth,
+      this.videoElement.nativeElement.offsetHeight );
   }
 
 }
