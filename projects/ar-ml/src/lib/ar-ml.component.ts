@@ -40,7 +40,8 @@ export class ArMlComponent implements OnInit {
   }
 
   startScene(){
-    console.log("Res: "+this.videoElement.nativeElement.offsetWidth+","+this.videoElement.nativeElement.offsetHeight);
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    console.log("Res: "+video.width+","+video.height);
     this.sceneManager.createScene(this.canvasElement.nativeElement,
       this.videoElement.nativeElement.offsetWidth,
       this.videoElement.nativeElement.offsetHeight );
