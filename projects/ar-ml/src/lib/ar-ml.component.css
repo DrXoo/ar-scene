@@ -1,7 +1,15 @@
 video, canvas{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 640px;
-    height: 480px;
+    width: 100%;
+    height: 100%; 
+}
+
+:host{
+    background-color: red;
+    display: block;
+
+    padding: 0;
+    margin: 0;
+    
+    width: 100%;
+    height: 100%;
 }

@@ -1,5 +1,3 @@
-import { Observable } from 'rxjs';
-
 export class CameraController{
 
     private videoElement: HTMLVideoElement;
@@ -12,15 +10,12 @@ export class CameraController{
     }
 
     canAccessCamera() : boolean {
-        console.log("Navigator state: "+ navigator.mediaDevices);
-        console.log("Navigator state: "+ navigator.mediaDevices.getUserMedia);
         return ((!!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)));
     }
 
     private existsVideoInputDevice() : boolean{
         var result = false;
         navigator.mediaDevices.enumerateDevices().then(devices => {
-            console.log("Media devices: "+ devices);
             result = devices.filter(device => device.kind == 'videoinput').length > 0;
         });
         return result;
