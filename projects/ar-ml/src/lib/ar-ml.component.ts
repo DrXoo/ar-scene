@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
-import { CameraController } from './controllers/camera.controller';
-import { SceneManager } from './managers/scene.manager';
+import { CameraService } from './services/camera.service';
+import { SceneService } from './services/scene.service';
 
 
 @Component({
@@ -20,19 +20,19 @@ export class ArMlComponent implements OnInit {
 
   deviceReady: any;
 
-  private camera : CameraController = new CameraController();
-  private sceneManager : SceneManager = new SceneManager();
-
-  constructor() { }
+  constructor(
+    private cameraService: CameraService,
+    private sceneService: SceneService
+  ) { }
  
   ngOnInit() {
   }
 
   ngAfterViewInit(){
-    if(this.camera.canAccessCamera()){
+    if(this.cameraService.canAccessCamera()){
       this.deviceReady = true;
 
-      this.camera.start(this.videoElement.nativeElement);
+      this.cameraService.start(this.videoElement.nativeElement);
     }
     else{
       this.deviceReady = false;
@@ -45,7 +45,7 @@ export class ArMlComponent implements OnInit {
     
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
-    this.sceneManager.createScene(this.canvasElement.nativeElement,
+    this.sceneService.createScene(this.canvasElement.nativeElement,
       video.clientWidth,
       video.clientHeight );
   }
