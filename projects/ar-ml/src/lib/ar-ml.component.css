@@ -5,24 +5,22 @@
 }
 
 video {
-    width: 95%;
-    height: 95%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    border-style: solid;
+    position:absolute;
+    left:0;
+    right:0;
+
+    width:100%;
 }
 
 canvas {
-    width: 95%;
-    height: 95%;
-    position: fixed;
+    position:absolute;
     top: 0;
     left: 0;
+
+    background-color: rgba(255, 0, 0, 0.336);
+    
     z-index: 20;
-    background-color:rgba(255,0,0,0.5);
-    opacity: 0.5;
-    border-style: dashed;
+    width:100%;
 }
 
 :host{

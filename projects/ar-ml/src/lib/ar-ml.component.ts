@@ -39,12 +39,19 @@ export class ArMlComponent implements OnInit {
     }
   }
 
-  startScene(){
+  async startScene(){
+
+    await this.delay(1000); 
+    
     const video: HTMLVideoElement = this.videoElement.nativeElement;
-    console.log("Res: "+video.width+","+video.height);
+
     this.sceneManager.createScene(this.canvasElement.nativeElement,
-      this.videoElement.nativeElement.offsetWidth,
-      this.videoElement.nativeElement.offsetHeight );
+      video.clientWidth,
+      video.clientHeight );
+  }
+
+  private delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
 }
