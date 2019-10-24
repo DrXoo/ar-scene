@@ -1,9 +1,9 @@
 <p *ngIf=!deviceReady> No input device found. </p>
 <div class="container">
-    <!-- <video #videoElement src="http://clips.vorwaerts-gmbh.de/VfE_html5.mp4" (play)="startScene()" controls autoplay></video>
-    <canvas #canvasElement></canvas> -->
-    <video #videoElement (play)="startScene()" [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
-    <canvas #canvasElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></canvas>
+    <video #videoElement src="./assets/test.mp4" (play)="startScene()" controls autoplay></video>
+    <canvas #canvasElement></canvas> 
+    <!-- <video #videoElement (play)="startScene()" [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
+    <canvas #canvasElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></canvas> -->
 </div>
 
 
