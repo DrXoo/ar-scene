@@ -1,4 +1,4 @@
-<p *ngIf=!deviceReady> No input device found. </p>
+<p *ngIf=!deviceReady> No input device found. Showing test video.  </p>
 <div class="container">
     <video #videoElement src="./assets/test.mp4" (play)="startScene()" controls autoplay></video>
     <canvas #canvasElement></canvas> 

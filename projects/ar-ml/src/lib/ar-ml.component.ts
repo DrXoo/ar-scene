@@ -29,14 +29,17 @@ export class ArMlComponent implements OnInit {
   }
 
   ngAfterViewInit(){
-    if(this.cameraService.canAccessCamera()){
-      this.deviceReady = true;
-
-      this.cameraService.start(this.videoElement.nativeElement);
-    }
-    else{
+    this.cameraService.loadFromUserCamera().catch(error => {
+      console.log("Error: "+error);
       this.deviceReady = false;
-    }
+    }).then( result => {
+      if(result){
+        if(result){
+          this.videoElement.nativeElement.srcObject = result;
+          this.videoElement.nativeElement.play();
+        }
+      }
+    })
   }
 
   async startScene(){
@@ -45,9 +48,11 @@ export class ArMlComponent implements OnInit {
     
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
-    this.sceneService.createScene(this.canvasElement.nativeElement,
+    this.sceneService.createWebGLScene(this.canvasElement.nativeElement,
       video.clientWidth,
       video.clientHeight );
+
+    this.sceneService.update();
   }
 
   private delay(ms: number) {

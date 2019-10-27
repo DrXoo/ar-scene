@@ -1,72 +1,80 @@
 import { Injectable } from '@angular/core';
-import { Scene, PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer } from 'three';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer } from 'three';
+import { SceneConfig } from '../models/scene.config';
+import { SceneInstance } from '../models/scene.instance';
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
 
 @Injectable({
   providedIn: 'root'
 })
 export class SceneService {
 
-  readonly FOV : number = 70;
-  readonly NEAREST_CAMERA_VALUE : number = 0.1;
-  readonly FAREST_CAMERA_VALUE : number = 10;
+    readonly FOV : number = 70;
+    readonly NEAREST_CAMERA_VALUE : number = 0.1;
+    readonly FAREST_CAMERA_VALUE : number = 10;
 
-  private webGLRenderer = new WebGLRenderer();
-  private canvas : HTMLCanvasElement;
-  private mesh: Mesh;
-  private scene: Scene;
-  private camera: PerspectiveCamera;
-  private width: number;
-  private height: number;
+    private camera: PerspectiveCamera;
+    private webGLScene: SceneInstance;
+    private css3DScene: SceneInstance;
 
-  constructor(){
-  }
+    constructor(){
+    }
 
-  public createScene(canvas : HTMLCanvasElement, width : number, height : number){
-      this.canvas = canvas;
-      this.width = width;
-      this.height = height;
-      this.camera = new PerspectiveCamera(this.FOV,
-          this.width / this.height, 
-          this.NEAREST_CAMERA_VALUE,
-          this.FAREST_CAMERA_VALUE );
+    public createCSS3DScene(canvas : HTMLCanvasElement, width : number, height : number){
+        this.createOrUseCamera(width, height);
 
-      this.camera.position.z = 1;
+        let config: SceneConfig = {
+            canvas: canvas,
+            width: width,
+            height: height,
+            renderer: new CSS3DRenderer(),
+        }
 
-      this.updateCanvasSize();
+        this.webGLScene = new SceneInstance(config);
+    }
 
-      this.scene = new Scene();
-      this.AddSampleBoxToScene();
+    public createWebGLScene(canvas : HTMLCanvasElement, width : number, height : number){
+        this.createOrUseCamera(width, height);
 
-      this.webGLRenderer = new WebGLRenderer( { canvas: this.canvas, antialias: true, alpha: true } );
-      this.webGLRenderer.setSize( this.width, this.height );
-      this.update();
-  }
+        let config: SceneConfig = {
+            canvas: canvas,
+            width: width,
+            height: height,
+            renderer: new WebGLRenderer( { canvas: canvas, antialias: true, alpha: true } ),
+        }
 
-  public AddSampleBoxToScene(){
-      var geometry = new BoxGeometry( 0.2, 0.2, 0.2 );
-      var material = new MeshNormalMaterial();
-  
-      this.mesh = new Mesh( geometry, material );
-      this.scene.add( this.mesh );
-  }
+        this.webGLScene = new SceneInstance(config);
 
-  public update(){
-      window.requestAnimationFrame(() => this.update());
-      this.mesh.rotation.x += 0.01;
-      this.mesh.rotation.y += 0.02;
-      this.webGLRenderer.render(this.scene, this.camera);
-  
-      this.updateCanvasSize();
-  
-      this.camera.aspect =  this.width / this.height;
-      this.camera.updateProjectionMatrix();
-  
-      this.webGLRenderer.setSize( this.width, this.height );
-  }
+        this.AddSampleBoxToScene();
+    }
 
+    public update(){
+        window.requestAnimationFrame(() => this.update());
 
-  private updateCanvasSize(){
-      this.canvas.width = this.width;
-      this.canvas.height = this.height;
-  }
+        if(this.webGLScene){
+            this.webGLScene.update(this.camera);
+        }
+
+        if(this.css3DScene){
+            this.css3DScene.update(this.camera);
+        }
+    }   
+
+    private AddSampleBoxToScene(){
+        var geometry = new BoxGeometry( 0.2, 0.2, 0.2 );
+        var material = new MeshNormalMaterial();
+
+        var mesh = new Mesh( geometry, material );
+        this.webGLScene.scene.add( mesh );
+    }
+
+    private createOrUseCamera(width: number, height: number) {
+        if(!this.camera){
+            this.camera = new PerspectiveCamera(this.FOV,
+                width / height, 
+                this.NEAREST_CAMERA_VALUE,
+                this.FAREST_CAMERA_VALUE );
+            this.camera.position.z = 1;
+        }
+    }
 }
