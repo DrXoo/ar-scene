@@ -10,10 +10,9 @@ export class SceneInstance {
     constructor(config: SceneConfig) {
         this.config = config;
 
-        this.updateCanvasSize();
+        // this.updateCanvasSize();
 
         this.scene = new Scene();
-        this.config.renderer = new WebGLRenderer( { canvas: this.config.canvas, antialias: true, alpha: true } );
         this.config.renderer.setSize(this.config.width, this.config.height);
     }
 
@@ -24,8 +23,8 @@ export class SceneInstance {
     public update(camera: PerspectiveCamera) {
         
   
-        this.scene.children[0].rotation.x += 0.01;
-        this.scene.children[0].rotation.y += 0.02;
+        // this.scene.children[0].rotation.x += 0.01;
+        // this.scene.children[0].rotation.y += 0.02;
 
         // this.updateCanvasSize();
 
@@ -34,8 +33,8 @@ export class SceneInstance {
         camera.updateProjectionMatrix();
     }
 
-    private updateCanvasSize() {
-        this.config.canvas.width = this.config.width;
-        this.config.canvas.height = this.config.height;
-    }
+    // private updateCanvasSize() {
+    //     this.config.canvas.width = this.config.width;
+    //     this.config.canvas.height = this.config.height;
+    // }
 }
