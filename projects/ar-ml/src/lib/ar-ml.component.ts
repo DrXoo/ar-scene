@@ -13,6 +13,9 @@ export class ArMlComponent implements OnInit {
   @ViewChild("container", {static: true})
   public containerElement: ElementRef;
 
+  @ViewChild("test", {static: true})
+  public test: ElementRef;
+
   @ViewChild("videoElement", {static: true})
   public videoElement: ElementRef;
 
@@ -56,7 +59,7 @@ export class ArMlComponent implements OnInit {
 
     this.sceneService.createCSS3DScene(this.containerElement, video.clientWidth, video.clientHeight);
 
-    this.sceneService.addDivToCSS3DScene(this.content); 
+    this.sceneService.attachDOMToCSS3DRenderer(this.test);  
 
     this.sceneService.update();
   }

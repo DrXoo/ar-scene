@@ -24,7 +24,7 @@ export class SceneInstance {
         
   
         // this.scene.children[0].rotation.x += 0.01;
-        // this.scene.children[0].rotation.y += 0.02;
+        this.scene.children[0].rotation.y += 0.02;
 
         // this.updateCanvasSize();
 
@@ -32,9 +32,4 @@ export class SceneInstance {
         this.config.renderer.render(this.scene, camera);
         camera.updateProjectionMatrix();
     }
-
-    // private updateCanvasSize() {
-    //     this.config.canvas.width = this.config.width;
-    //     this.config.canvas.height = this.config.height;
-    // }
 }

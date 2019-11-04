@@ -1,8 +1,10 @@
 <p *ngIf=!deviceReady> No input device found. Showing test video.  </p>
+<div #test>
+    <lib-test></lib-test>
+</div>
 <div class="container" #container>
-    <video #videoElement src="./assets/test.mp4" (play)="startScene()" controls autoplay></video>
-    <!-- <video #videoElement (play)="startScene()" [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
-    <canvas #canvasElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></canvas> -->
+    <video #videoElement src="./assets/test.mp4" [style.visibility]="!deviceReady ? 'visible' : 'hidden'" (play)="startScene()" controls autoplay></video>
+    <video #videoElement (play)="startScene()" [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
 </div>
 
 
