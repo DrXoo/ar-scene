@@ -1,8 +1,9 @@
-import { Injectable, Renderer2, ElementRef } from '@angular/core';
-import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry } from 'three';
+import { Injectable, ElementRef } from '@angular/core';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry, Vector3 } from 'three';
 import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
-import { CSS3DRenderer, CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer'
+import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
+import { UIObject } from '../models/uiObject';
 
 @Injectable({
   providedIn: 'root'
@@ -56,20 +57,16 @@ export class SceneService {
         var wrapper = document.createElement('div');
         wrapper.appendChild(element.nativeElement);
 
-        console.log(element.nativeElement.children[0].width);
-        console.log(element.nativeElement.children[0].offsetWidth);
-        console.log(element.nativeElement.offsetWidth);
+        let uiObject = new UIObject(
+            wrapper,
+            new Vector3(-200,0,0),
+            new Vector3(200,0,0), 
+            (x) => {
+                x.rotation.y += 0.01;
+            }
+        );
 
-        let pivot = new Group();
-        
-        let css3dObject = new CSS3DObject(wrapper);
-
-        pivot.add(css3dObject);
-        pivot.position.set(-200,0,0);
-        css3dObject.position.set(200,0,0);
-
-        this.css3DScene.AddToScene(pivot);
-        console.log(this.css3DScene.config.renderer);
+        this.css3DScene.AddToScene(uiObject);
     }
 
     public update(){
