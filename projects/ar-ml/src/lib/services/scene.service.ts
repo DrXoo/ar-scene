@@ -26,43 +26,20 @@ export class SceneService {
     constructor(){
     }
 
-    public createCSS3DScene(container: ElementRef,  width : number, height : number){
-        this.createOrUseCamera(width, height);
-
-        let renderer = new CSS3DRenderer();
-
-        let config: SceneConfig = {
-            width: width,
-            height: height,
-            renderer: renderer,
-        }
-        container.nativeElement.appendChild(config.renderer.domElement);
-        
-        this.css3DScene = new SceneInstance(config);
-    }
-
-    public createWebGLScene(canvas : HTMLCanvasElement, width : number, height : number){
-        this.createOrUseCamera(width, height);
-
-        let config: SceneConfig = {
-            // canvas: canvas,
-            width: width,
-            height: height,
-            renderer: new WebGLRenderer( { canvas: canvas, antialias: true, alpha: true } ),
-        }
-
-        this.webGLScene = new SceneInstance(config);
+    public createScene(container: ElementRef,  width : number, height : number){
+        this.createCSS3DScene(container, width, height);
+        this.createWebGLScene(container, width, height);
 
         this.AddSampleBoxToScene();
     }
 
-    public attachDOMToCSS3DRenderer(element: ElementRef){
+    public addUIElement(element: ElementRef, positionType : PositionType, anchorType : AnchorType){
 
         let uiObject = new UIObject(
             element.nativeElement, 
             new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
-            PositionType.ABSOLUTE, 
-            AnchorType.LEFT,
+            positionType, 
+            anchorType,
             (x) => {
                 x.rotation.y += 0.01;
             }
@@ -84,10 +61,46 @@ export class SceneService {
     }
     
     public launchRay(x : number, y : number){
-
         this.raycaster.setFromCamera({x,y}, this.camera);
-        console.log("ke");
         console.log(this.raycaster.intersectObjects(this.css3DScene.scene.children, true));
+    }
+
+    
+    private createCSS3DScene(container: ElementRef,  width : number, height : number){
+        this.createOrUseCamera(width, height);
+
+        let config: SceneConfig = {
+            width: width,
+            height: height,
+            renderer: new CSS3DRenderer(),
+        }
+        
+        config.renderer.domElement.style.zIndex = "20";
+
+        container.nativeElement.appendChild(config.renderer.domElement);
+        
+        this.css3DScene = new SceneInstance(config);
+    }
+
+    private createWebGLScene(container: ElementRef, width : number, height : number){
+        this.createOrUseCamera(width, height);
+
+        var canvas = document.createElement('canvas');
+        canvas.style.position = "absolute";
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.zIndex = "10";
+
+        let config: SceneConfig = {
+            width: width,
+            height: height,
+            renderer: new WebGLRenderer( { canvas: canvas, antialias: true, alpha: true } ),
+        }
+        console.log(config.renderer.domElement);
+        
+        container.nativeElement.appendChild(config.renderer.domElement);
+
+        this.webGLScene = new SceneInstance(config);
     }
 
     private AddSampleBoxToScene(){

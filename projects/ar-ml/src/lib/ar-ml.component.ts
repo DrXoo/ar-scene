@@ -1,6 +1,8 @@
 import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
 import { CameraService } from './services/camera.service';
 import { SceneService } from './services/scene.service';
+import { PositionType } from './enums/position-enum';
+import { AnchorType } from './enums/anchor-enum';
 
 
 @Component({
@@ -50,13 +52,9 @@ export class ArMlComponent implements OnInit {
     
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
-    // this.sceneService.createWebGLScene(this.canvasElement.nativeElement,
-    //   video.clientWidth,
-    //   video.clientHeight );
+    this.sceneService.createScene(this.containerElement, video.clientWidth, video.clientHeight);
 
-    this.sceneService.createCSS3DScene(this.containerElement, video.clientWidth, video.clientHeight);
-
-    this.sceneService.attachDOMToCSS3DRenderer(this.contentHost);  
+    this.sceneService.addUIElement(this.contentHost, PositionType.ABSOLUTE, AnchorType.LEFT);  
 
     this.sceneService.update();
   }
