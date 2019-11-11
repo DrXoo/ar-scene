@@ -4,6 +4,10 @@
     height: 100%;
 }
 
+.contentHost{
+    display: none;
+}
+
 video {
     position:absolute;
     left:0;

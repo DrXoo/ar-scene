@@ -56,13 +56,14 @@ export class SceneService {
     public attachDOMToCSS3DRenderer(element: ElementRef){
         var wrapper = document.createElement('div');
         wrapper.appendChild(element.nativeElement);
-
+        console.log(element);
+        console.log(element.nativeElement.clientWidth / 2);
         let uiObject = new UIObject(
             wrapper,
-            new Vector3(-200,0,0),
-            new Vector3(200,0,0), 
+            new Vector3(0,0,0),
+            new Vector3(element.nativeElement.offsetWidth,0,0), 
             (x) => {
-                x.rotation.y += 0.01;
+                //x.rotation.y += 0.01;
             }
         );
 

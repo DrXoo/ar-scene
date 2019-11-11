@@ -5,11 +5,11 @@ import { SceneService } from './services/scene.service';
 import { CameraService } from './services/camera.service';
 import {MatCardModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material/button';
-import { TestComponent } from './components/test/test.component';
+import { ArUiDirectiveComponent } from './directives/ar-ui-directive/ar-ui-directive.component';
 
 
 @NgModule({
-  declarations: [ArMlComponent, TestComponent],
+  declarations: [ArMlComponent, ArUiDirectiveComponent],
   imports: [
     CommonModule,
     MatCardModule,

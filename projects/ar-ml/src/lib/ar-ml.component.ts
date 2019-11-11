@@ -13,8 +13,8 @@ export class ArMlComponent implements OnInit {
   @ViewChild("container", {static: true})
   public containerElement: ElementRef;
 
-  @ViewChild("test", {static: true})
-  public test: ElementRef;
+  @ViewChild("contentHost", {static: true})
+  public contentHost: ElementRef;
 
   @ViewChild("videoElement", {static: true})
   public videoElement: ElementRef;
@@ -22,8 +22,6 @@ export class ArMlComponent implements OnInit {
   @Output() onError: EventEmitter<string> = new EventEmitter();
 
   deviceReady: any;
-
-  content = '<lib-test></lib-test>';
 
   constructor(
     private cameraService: CameraService,
@@ -39,10 +37,9 @@ export class ArMlComponent implements OnInit {
       this.deviceReady = false;
     }).then( result => {
       if(result){
-        if(result){
-          this.videoElement.nativeElement.srcObject = result;
-          this.videoElement.nativeElement.play();
-        }
+        this.videoElement.nativeElement.srcObject = result;
+        this.videoElement.nativeElement.play();
+        this.deviceReady = true;
       }
     })
   }
@@ -59,7 +56,7 @@ export class ArMlComponent implements OnInit {
 
     this.sceneService.createCSS3DScene(this.containerElement, video.clientWidth, video.clientHeight);
 
-    this.sceneService.attachDOMToCSS3DRenderer(this.test);  
+    this.sceneService.attachDOMToCSS3DRenderer(this.contentHost);  
 
     this.sceneService.update();
   }

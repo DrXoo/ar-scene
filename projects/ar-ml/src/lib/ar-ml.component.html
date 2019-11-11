@@ -1,6 +1,8 @@
 <p *ngIf=!deviceReady> No input device found. Showing test video.  </p>
-<div #test style="width: 50%;">
-    <lib-test></lib-test>
+<div style="display:none">
+    <div #contentHost>
+        <ng-content></ng-content>
+    </div>
 </div>
 <div class="container" #container>
     <video #videoElement src="./assets/test.mp4" [style.visibility]="!deviceReady ? 'visible' : 'hidden'" (play)="startScene()" controls autoplay></video>
