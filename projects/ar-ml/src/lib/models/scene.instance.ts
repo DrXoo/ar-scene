@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene } from 'three';
+import { PerspectiveCamera, Scene, Raycaster } from 'three';
 import { SceneConfig } from './scene.config';
 import { UIObject } from './uiObject';
 
@@ -10,7 +10,6 @@ export class SceneInstance {
 
     constructor(config: SceneConfig) {
         this.config = config;
-
         this.scene = new Scene();
         this.config.renderer.setSize(this.config.width, this.config.height);
     }

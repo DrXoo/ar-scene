@@ -61,6 +61,18 @@ export class ArMlComponent implements OnInit {
     this.sceneService.update();
   }
 
+  public clickEvent(event: MouseEvent){
+    const video: HTMLVideoElement = this.videoElement.nativeElement;
+
+    let x = ( event.clientX / video.clientWidth ) * 2 - 1;
+    let y = - ( event.clientY / video.clientHeight ) * 2 + 1;
+    
+    console.log("Event: " + event.clientX + "," + event.clientY);
+    console.log("video: " + video.clientWidth  + "," + video.clientHeight);
+    console.log("Result: "+ x + ","+ y);
+    this.sceneService.launchRay(x, y);
+  }
+
   private delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
   }

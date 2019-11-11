@@ -1,5 +1,8 @@
 <p *ngIf=!deviceReady> No input device found. Showing test video.  </p>
 <div style="display:none">
+    <div id="loco">
+        <button (click)="clickEvent($event)" >TEST</button>
+    </div>
     <div #contentHost>
         <ng-content></ng-content>
     </div>

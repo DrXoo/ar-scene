@@ -1,5 +1,5 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry, Vector3, Vector2 } from 'three';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Vector2, Raycaster, Vector3 } from 'three';
 import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
@@ -19,6 +19,7 @@ export class SceneService {
     readonly FAREST_CAMERA_VALUE : number = 1000
 
     private camera: PerspectiveCamera;
+    private raycaster : Raycaster = new Raycaster();
     private webGLScene: SceneInstance;
     private css3DScene: SceneInstance;
 
@@ -56,11 +57,9 @@ export class SceneService {
     }
 
     public attachDOMToCSS3DRenderer(element: ElementRef){
-        var wrapper = document.createElement('div');
-        wrapper.appendChild(element.nativeElement);
 
         let uiObject = new UIObject(
-            wrapper, 
+            element.nativeElement, 
             new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
             PositionType.ABSOLUTE, 
             AnchorType.LEFT,
@@ -82,7 +81,14 @@ export class SceneService {
         if(this.css3DScene){
             this.css3DScene.update(this.camera);
         }
-    }   
+    }
+    
+    public launchRay(x : number, y : number){
+
+        this.raycaster.setFromCamera({x,y}, this.camera);
+        console.log("ke");
+        console.log(this.raycaster.intersectObjects(this.css3DScene.scene.children, true));
+    }
 
     private AddSampleBoxToScene(){
         var geometry = new BoxGeometry( 0.2, 0.2, 0.2 );
