@@ -10,11 +10,14 @@ import { SceneService } from './services/scene.service';
 })
 export class ArMlComponent implements OnInit {
 
+  @ViewChild("container", {static: true})
+  public containerElement: ElementRef;
+
+  @ViewChild("contentHost", {static: true})
+  public contentHost: ElementRef;
+
   @ViewChild("videoElement", {static: true})
   public videoElement: ElementRef;
-
-  @ViewChild("canvasElement", {static: true})
-  public canvasElement: ElementRef;
 
   @Output() onError: EventEmitter<string> = new EventEmitter();
 
@@ -34,10 +37,9 @@ export class ArMlComponent implements OnInit {
       this.deviceReady = false;
     }).then( result => {
       if(result){
-        if(result){
-          this.videoElement.nativeElement.srcObject = result;
-          this.videoElement.nativeElement.play();
-        }
+        this.videoElement.nativeElement.srcObject = result;
+        this.videoElement.nativeElement.play();
+        this.deviceReady = true;
       }
     })
   }
@@ -48,9 +50,13 @@ export class ArMlComponent implements OnInit {
     
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
-    this.sceneService.createWebGLScene(this.canvasElement.nativeElement,
-      video.clientWidth,
-      video.clientHeight );
+    // this.sceneService.createWebGLScene(this.canvasElement.nativeElement,
+    //   video.clientWidth,
+    //   video.clientHeight );
+
+    this.sceneService.createCSS3DScene(this.containerElement, video.clientWidth, video.clientHeight);
+
+    this.sceneService.attachDOMToCSS3DRenderer(this.contentHost);  
 
     this.sceneService.update();
   }

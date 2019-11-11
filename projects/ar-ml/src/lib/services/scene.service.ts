@@ -1,17 +1,22 @@
-import { Injectable } from '@angular/core';
-import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer } from 'three';
+import { Injectable, ElementRef } from '@angular/core';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry, Vector3, Vector2 } from 'three';
 import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
+import { UIObject } from '../models/uiObject';
+import { PositionType } from '../enums/position-enum';
+import { AnchorType } from '../enums/anchor-enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SceneService {
 
-    readonly FOV : number = 70;
+    readonly FOV : number = 45;
+    readonly perspective = 1500;
+    
     readonly NEAREST_CAMERA_VALUE : number = 0.1;
-    readonly FAREST_CAMERA_VALUE : number = 10;
+    readonly FAREST_CAMERA_VALUE : number = 1000
 
     private camera: PerspectiveCamera;
     private webGLScene: SceneInstance;
@@ -20,24 +25,26 @@ export class SceneService {
     constructor(){
     }
 
-    public createCSS3DScene(canvas : HTMLCanvasElement, width : number, height : number){
+    public createCSS3DScene(container: ElementRef,  width : number, height : number){
         this.createOrUseCamera(width, height);
 
+        let renderer = new CSS3DRenderer();
+
         let config: SceneConfig = {
-            canvas: canvas,
             width: width,
             height: height,
-            renderer: new CSS3DRenderer(),
+            renderer: renderer,
         }
-
-        this.webGLScene = new SceneInstance(config);
+        container.nativeElement.appendChild(config.renderer.domElement);
+        
+        this.css3DScene = new SceneInstance(config);
     }
 
     public createWebGLScene(canvas : HTMLCanvasElement, width : number, height : number){
         this.createOrUseCamera(width, height);
 
         let config: SceneConfig = {
-            canvas: canvas,
+            // canvas: canvas,
             width: width,
             height: height,
             renderer: new WebGLRenderer( { canvas: canvas, antialias: true, alpha: true } ),
@@ -46,6 +53,23 @@ export class SceneService {
         this.webGLScene = new SceneInstance(config);
 
         this.AddSampleBoxToScene();
+    }
+
+    public attachDOMToCSS3DRenderer(element: ElementRef){
+        var wrapper = document.createElement('div');
+        wrapper.appendChild(element.nativeElement);
+
+        let uiObject = new UIObject(
+            wrapper, 
+            new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
+            PositionType.ABSOLUTE, 
+            AnchorType.LEFT,
+            (x) => {
+                x.rotation.y += 0.01;
+            }
+        );
+
+        this.css3DScene.AddToScene(uiObject);
     }
 
     public update(){
@@ -70,11 +94,12 @@ export class SceneService {
 
     private createOrUseCamera(width: number, height: number) {
         if(!this.camera){
-            this.camera = new PerspectiveCamera(this.FOV,
+            const fov = 180 * ( 2 * Math.atan( height / 2 / this.perspective ) ) / Math.PI
+            this.camera = new PerspectiveCamera(fov,
                 width / height, 
                 this.NEAREST_CAMERA_VALUE,
                 this.FAREST_CAMERA_VALUE );
-            this.camera.position.z = 1;
+            this.camera.position.set(0, 0, this.perspective);
         }
     }
 }

@@ -1,5 +1,6 @@
-import { PerspectiveCamera, Scene, Vector3, WebGLRenderer } from 'three';
+import { PerspectiveCamera, Scene } from 'three';
 import { SceneConfig } from './scene.config';
+import { UIObject } from './uiObject';
 
 export class SceneInstance {
 
@@ -10,10 +11,7 @@ export class SceneInstance {
     constructor(config: SceneConfig) {
         this.config = config;
 
-        this.updateCanvasSize();
-
         this.scene = new Scene();
-        this.config.renderer = new WebGLRenderer( { canvas: this.config.canvas, antialias: true, alpha: true } );
         this.config.renderer.setSize(this.config.width, this.config.height);
     }
 
@@ -22,20 +20,13 @@ export class SceneInstance {
     }
 
     public update(camera: PerspectiveCamera) {
-        
   
-        this.scene.children[0].rotation.x += 0.01;
-        this.scene.children[0].rotation.y += 0.02;
+        this.scene.children
+            .filter(x => x instanceof UIObject)
+            .forEach(x => (<UIObject>x).update())
 
-        // this.updateCanvasSize();
 
-        // this.camera.aspect = this.config.width / this.config.height;
         this.config.renderer.render(this.scene, camera);
         camera.updateProjectionMatrix();
-    }
-
-    private updateCanvasSize() {
-        this.config.canvas.width = this.config.width;
-        this.config.canvas.height = this.config.height;
     }
 }
