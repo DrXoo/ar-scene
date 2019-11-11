@@ -1,5 +1,5 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry, Vector3 } from 'three';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Object3D, Group, Geometry, Vector3, Vector2 } from 'three';
 import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
@@ -58,14 +58,14 @@ export class SceneService {
     public attachDOMToCSS3DRenderer(element: ElementRef){
         var wrapper = document.createElement('div');
         wrapper.appendChild(element.nativeElement);
-        console.log(element);
-        console.log(element.nativeElement.clientWidth / 2);
+
         let uiObject = new UIObject(
             wrapper, 
+            new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
             PositionType.ABSOLUTE, 
             AnchorType.LEFT,
             (x) => {
-                //x.rotation.y += 0.01;
+                x.rotation.y += 0.01;
             }
         );
 
