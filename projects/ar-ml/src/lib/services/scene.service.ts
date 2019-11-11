@@ -4,6 +4,8 @@ import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
 import { UIObject } from '../models/uiObject';
+import { PositionType } from '../enums/position-enum';
+import { AnchorType } from '../enums/anchor-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -59,9 +61,9 @@ export class SceneService {
         console.log(element);
         console.log(element.nativeElement.clientWidth / 2);
         let uiObject = new UIObject(
-            wrapper,
-            new Vector3(0,0,0),
-            new Vector3(element.nativeElement.offsetWidth,0,0), 
+            wrapper, 
+            PositionType.ABSOLUTE, 
+            AnchorType.LEFT,
             (x) => {
                 //x.rotation.y += 0.01;
             }

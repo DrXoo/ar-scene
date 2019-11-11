@@ -1,13 +1,14 @@
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { Group, Vector3 } from 'three';
-import { UIObjectConfig, PositionType, AnchorType } from './ui-object.config';
 import { ElementRef } from '@angular/core';
+import { PositionType } from '../enums/position-enum';
+import { AnchorType } from '../enums/anchor-enum';
+import { UIPositionHelper } from '../helpers/ui-position.helper';
 
 export class UIObject extends Group{
 
     private container: ElementRef;
     private cssObject: CSS3DObject;
-    private config: UIObjectConfig;
     private updateDelegate : (object : UIObject) => void;
 
     public cssObjectPosition() : Vector3 {
@@ -17,17 +18,14 @@ export class UIObject extends Group{
     constructor(element : HTMLElement,
         positionType: PositionType,
         anchorType: AnchorType,
-        pivotPosition : Vector3,
-        uiElementPosition: Vector3,
         updateDelegate : (object : UIObject) => void){
         super();
 
-        this.config
         this.cssObject = new CSS3DObject(element);
         
         this.add(this.cssObject);
-        this.position.set(pivotPosition.x, pivotPosition.y, pivotPosition.z);
-        this.cssObject.position.set(uiElementPosition.x, uiElementPosition.y, uiElementPosition.z);
+
+        UIPositionHelper.setPosition(this.position, this.cssObject.position, null, positionType, anchorType);
 
         this.updateDelegate = updateDelegate;
     }

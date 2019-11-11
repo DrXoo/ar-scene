@@ -1,26 +1,36 @@
-import { UIObject } from 'ar-ml/lib/models/uiObject';
-import { PositionType, AnchorType } from '../models/ui-object.config';
+import { Vector3, Vector2 } from 'three';
+import { PositionType } from '../enums/position-enum';
+import { AnchorType } from '../enums/anchor-enum';
 
-export class UIPositionHelper{
-    public static setPosition(uiObject: UIObject, positionType: PositionType, anchorType: AnchorType) : void {
+export class UIPositionHelper {
+
+    public static setPosition(pivot : Vector3, position : Vector3, containerSize: Vector2, positionType: PositionType, anchorType: AnchorType) : void {
         if(positionType == PositionType.ABSOLUTE){
-            this.setAbsolutePosition(uiObject, anchorType);
+            this.setAbsolutePosition(pivot, position, containerSize, anchorType);
         }
     }
 
-    private static setAbsolutePosition(uiObject: UIObject, anchorType: AnchorType) : void{
+    private static setAbsolutePosition(pivot : Vector3,
+             position : Vector3, 
+             containerSize: Vector2,
+             anchorType: AnchorType) : void{
         switch(anchorType){
             case AnchorType.LEFT:
-                uiObject.cssObjectPosition().set(uiObject.containerWidth(),0,0);
-                uiObject.position.set(-uiObject.containerWidth(),0,0);
+                position.set(containerSize.x,0,0);
+                pivot.set(-containerSize.x,0,0);
                 break;
             case AnchorType.RIGHT:
-                uiObject.cssObjectPosition().set(-uiObject.containerWidth(),0,0);
-                uiObject.position.set(+uiObject.containerWidth(),0,0);
+                position.set(-containerSize.x,0,0);
+                pivot.set(+containerSize.x,0,0);
                 break;
             case AnchorType.CENTER:
-                uiObject.cssObjectPosition().set(0,0,0);
-                uiObject.position.set(0,0,0);
+                position.set(0,0,0);
+                pivot.set(0,0,0);
+                break;
+            default:
+                console.log("Position not implemented: "+anchorType);
+                position.set(0,0,0);
+                pivot.set(0,0,0);
                 break;
         }
     }
