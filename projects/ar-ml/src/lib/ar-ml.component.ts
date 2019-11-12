@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter, HostListener } from '@angular/core';
 import { CameraService } from './services/camera.service';
 import { SceneService } from './services/scene.service';
 import { PositionType } from './enums/position-enum';
@@ -17,6 +17,9 @@ export class ArMlComponent implements OnInit {
 
   @ViewChild("contentHost", {static: true})
   public contentHost: ElementRef;
+
+  @ViewChild("canvasElement", {static: true})
+  public canvasElement: ElementRef;
 
   @ViewChild("videoElement", {static: true})
   public videoElement: ElementRef;
@@ -53,26 +56,34 @@ export class ArMlComponent implements OnInit {
     const video: HTMLVideoElement = this.videoElement.nativeElement;
 
     this.sceneService.createScene(this.containerElement, video.clientWidth, video.clientHeight);
-
+    this.sceneService.AddSampleBoxToScene();
     this.sceneService.addUIElement(this.contentHost, PositionType.ABSOLUTE, AnchorType.LEFT);  
-
     this.sceneService.update();
+    
+
+    // this.sceneService.update();
   }
 
-  public clickEvent(event: MouseEvent){
+  public clickEvent(event: any){
     const video: HTMLVideoElement = this.videoElement.nativeElement;
-
-    let x = ( event.clientX / video.clientWidth ) * 2 - 1;
-    let y = - ( event.clientY / video.clientHeight ) * 2 + 1;
+    console.log(event);
+    let x = ( event.layerX / video.clientWidth ) * 2 - 1;
+    let y = - ( event.layerY / video.clientHeight ) * 2 + 1;
     
-    console.log("Event: " + event.clientX + "," + event.clientY);
-    console.log("video: " + video.clientWidth  + "," + video.clientHeight);
-    console.log("Result: "+ x + ","+ y);
     this.sceneService.launchRay(x, y);
   }
 
   private delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  @HostListener('document:click', ['$event', '$event.target'])
+  onClick(event: any, targetElement: HTMLElement): void {
+      console.log(event);
+      const video: HTMLVideoElement = this.videoElement.nativeElement;
+      let x = ( event.layerX / video.clientWidth ) * 2 - 1;
+      let y = - ( event.layerY / video.clientHeight ) * 2 + 1;
+      this.sceneService.launchRay(x, y);
   }
 
 }

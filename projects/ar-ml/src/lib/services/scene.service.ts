@@ -12,13 +12,12 @@ import { AnchorType } from '../enums/anchor-enum';
 })
 export class SceneService {
 
-    readonly FOV : number = 45;
-    readonly perspective = 1500;
+    readonly WEBGL_FOV : number = 70;
+    readonly UI_RENDER_PERSPECTIVE = 1500;
     
     readonly NEAREST_CAMERA_VALUE : number = 0.1;
     readonly FAREST_CAMERA_VALUE : number = 1000
 
-    private camera: PerspectiveCamera;
     private raycaster : Raycaster = new Raycaster();
     private webGLScene: SceneInstance;
     private css3DScene: SceneInstance;
@@ -27,10 +26,8 @@ export class SceneService {
     }
 
     public createScene(container: ElementRef,  width : number, height : number){
-        this.createCSS3DScene(container, width, height);
         this.createWebGLScene(container, width, height);
-
-        this.AddSampleBoxToScene();
+        this.createCSS3DScene(container, width, height);
     }
 
     public addUIElement(element: ElementRef, positionType : PositionType, anchorType : AnchorType){
@@ -52,24 +49,29 @@ export class SceneService {
         window.requestAnimationFrame(() => this.update());
 
         if(this.webGLScene){
-            this.webGLScene.update(this.camera);
+            this.webGLScene.update();
         }
 
         if(this.css3DScene){
-            this.css3DScene.update(this.camera);
+            this.css3DScene.update();
         }
     }
     
     public launchRay(x : number, y : number){
-        this.raycaster.setFromCamera({x,y}, this.camera);
-        console.log(this.raycaster.intersectObjects(this.css3DScene.scene.children, true));
+         this.raycaster.setFromCamera({x,y}, this.webGLScene.config.camera);
+         console.log(this.raycaster.intersectObjects(this.webGLScene.scene.children, true));
     }
 
     
     private createCSS3DScene(container: ElementRef,  width : number, height : number){
-        this.createOrUseCamera(width, height);
+        const fov = 180 * ( 2 * Math.atan( height / 2 / this.UI_RENDER_PERSPECTIVE ) ) / Math.PI
+
+        let camera = this.createCamera(fov, width, height);
+
+        camera.position.z = this.UI_RENDER_PERSPECTIVE;
 
         let config: SceneConfig = {
+            camera: camera,
             width: width,
             height: height,
             renderer: new CSS3DRenderer(),
@@ -77,48 +79,52 @@ export class SceneService {
         
         config.renderer.domElement.style.zIndex = "20";
 
+        config.renderer.domElement.style.position = "absolute";
+        config.renderer.domElement.style.top = "0";
+        config.renderer.domElement.style.left = "0";
+
         container.nativeElement.appendChild(config.renderer.domElement);
         
         this.css3DScene = new SceneInstance(config);
     }
 
     private createWebGLScene(container: ElementRef, width : number, height : number){
-        this.createOrUseCamera(width, height);
+        let camera = this.createCamera(this.WEBGL_FOV, width, height);
 
-        var canvas = document.createElement('canvas');
-        canvas.style.position = "absolute";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.zIndex = "10";
+        camera.position.set(0, 0, 1);
 
         let config: SceneConfig = {
+            camera: camera,
             width: width,
             height: height,
-            renderer: new WebGLRenderer( { canvas: canvas, antialias: true, alpha: true } ),
+            renderer: new WebGLRenderer( { antialias: true, alpha: true } ),
         }
-        console.log(config.renderer.domElement);
-        
+
+        config.renderer.domElement.style.zIndex = "10";
+
+        config.renderer.domElement.style.position = "absolute";
+        config.renderer.domElement.style.top = "0";
+        config.renderer.domElement.style.left = "0";
+
         container.nativeElement.appendChild(config.renderer.domElement);
 
         this.webGLScene = new SceneInstance(config);
     }
 
-    private AddSampleBoxToScene(){
+    public AddSampleBoxToScene(){
         var geometry = new BoxGeometry( 0.2, 0.2, 0.2 );
+
         var material = new MeshNormalMaterial();
 
         var mesh = new Mesh( geometry, material );
+        
         this.webGLScene.scene.add( mesh );
     }
 
-    private createOrUseCamera(width: number, height: number) {
-        if(!this.camera){
-            const fov = 180 * ( 2 * Math.atan( height / 2 / this.perspective ) ) / Math.PI
-            this.camera = new PerspectiveCamera(fov,
-                width / height, 
-                this.NEAREST_CAMERA_VALUE,
-                this.FAREST_CAMERA_VALUE );
-            this.camera.position.set(0, 0, this.perspective);
-        }
+    private createCamera(fov : number, width: number, height: number) : PerspectiveCamera {
+        return  new PerspectiveCamera(fov,
+            width / height, 
+            this.NEAREST_CAMERA_VALUE,
+            this.FAREST_CAMERA_VALUE );
     }
 }
