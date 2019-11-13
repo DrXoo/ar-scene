@@ -32,13 +32,14 @@ export class SceneService {
 
     public addUIElement(element: ElementRef, positionType : PositionType, anchorType : AnchorType){
 
+        console.log(this.css3DScene.config);
         let uiObject = new UIObject(
             element.nativeElement, 
             new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
             positionType, 
             anchorType,
             (x) => {
-                x.rotation.y += 0.01;
+                //x.rotation.y += 0.01;
             }
         );
 

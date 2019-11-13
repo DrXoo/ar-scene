@@ -59,18 +59,11 @@ export class ArMlComponent implements OnInit {
     this.sceneService.AddSampleBoxToScene();
     this.sceneService.addUIElement(this.contentHost, PositionType.ABSOLUTE, AnchorType.LEFT);  
     this.sceneService.update();
-    
-
-    // this.sceneService.update();
   }
 
   public clickEvent(event: any){
-    const video: HTMLVideoElement = this.videoElement.nativeElement;
     console.log(event);
-    let x = ( event.layerX / video.clientWidth ) * 2 - 1;
-    let y = - ( event.layerY / video.clientHeight ) * 2 + 1;
-    
-    this.sceneService.launchRay(x, y);
+
   }
 
   private delay(ms: number) {
@@ -79,7 +72,6 @@ export class ArMlComponent implements OnInit {
 
   @HostListener('document:click', ['$event', '$event.target'])
   onClick(event: any, targetElement: HTMLElement): void {
-      console.log(event);
       const video: HTMLVideoElement = this.videoElement.nativeElement;
       let x = ( event.layerX / video.clientWidth ) * 2 - 1;
       let y = - ( event.layerY / video.clientHeight ) * 2 + 1;
