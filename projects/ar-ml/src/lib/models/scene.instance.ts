@@ -1,4 +1,4 @@
-import { PerspectiveCamera, Scene } from 'three';
+import { Scene, Mesh } from 'three';
 import { SceneConfig } from './scene.config';
 import { UIObject } from './uiObject';
 
@@ -10,7 +10,6 @@ export class SceneInstance {
 
     constructor(config: SceneConfig) {
         this.config = config;
-
         this.scene = new Scene();
         this.config.renderer.setSize(this.config.width, this.config.height);
     }
@@ -19,14 +18,20 @@ export class SceneInstance {
         this.scene.add(object);
     }
 
-    public update(camera: PerspectiveCamera) {
+    public update() {
   
         this.scene.children
             .filter(x => x instanceof UIObject)
             .forEach(x => (<UIObject>x).update())
 
+        this.scene.children
+            .filter(x => x instanceof Mesh)
+            .forEach(x => {
+                x.rotation.x += 0.01;
+                x.rotation.y += 0.02;
+            })
 
-        this.config.renderer.render(this.scene, camera);
-        camera.updateProjectionMatrix();
+        this.config.renderer.render(this.scene, this.config.camera);
+        this.config.camera.updateProjectionMatrix();
     }
 }

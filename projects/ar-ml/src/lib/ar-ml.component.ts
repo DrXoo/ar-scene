@@ -1,6 +1,8 @@
-import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter, HostListener, ComponentFactoryResolver } from '@angular/core';
 import { CameraService } from './services/camera.service';
 import { SceneService } from './services/scene.service';
+import { SceneObjectDirective } from './directives/scene-object.directive';
+import { SceneObjectConfig } from './models/scene-object-config';
 
 
 @Component({
@@ -10,59 +12,83 @@ import { SceneService } from './services/scene.service';
 })
 export class ArMlComponent implements OnInit {
 
-  @ViewChild("container", {static: true})
-  public containerElement: ElementRef;
-
-  @ViewChild("contentHost", {static: true})
-  public contentHost: ElementRef;
-
-  @ViewChild("videoElement", {static: true})
-  public videoElement: ElementRef;
+  @ViewChild( SceneObjectDirective, {static: true}) private sceneObjectHost: SceneObjectDirective;
+  @ViewChild("container", {static: true})  private container: ElementRef;
+  @ViewChild("videoElement", {static: true}) private video: ElementRef;
 
   @Output() onError: EventEmitter<string> = new EventEmitter();
+  @Output() onAddSceneObject: EventEmitter<SceneObjectConfig> = new EventEmitter<SceneObjectConfig>();
+  @Output() onSceneReady: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   deviceReady: any;
 
   constructor(
     private cameraService: CameraService,
-    private sceneService: SceneService
+    private sceneService: SceneService,
+    private componentFactoryResolver: ComponentFactoryResolver
   ) { }
  
   ngOnInit() {
   }
 
   ngAfterViewInit(){
-    this.cameraService.loadFromUserCamera().catch(error => {
+    this.cameraService.loadFromUserCamera()
+    .catch( error => {
       console.log("Error: "+error);
       this.deviceReady = false;
-    }).then( result => {
+    })
+    .then( result => {
       if(result){
-        this.videoElement.nativeElement.srcObject = result;
-        this.videoElement.nativeElement.play();
+        this.video.nativeElement.srcObject = result;
+        (<HTMLVideoElement>this.video.nativeElement).play();
         this.deviceReady = true;
       }
+    });
+
+    (<HTMLVideoElement>this.video.nativeElement).addEventListener("play", x => {
+      this.startScene();
     })
+
+    this.onAddSceneObject.subscribe((result : SceneObjectConfig) => {
+      this.addSceneObject(result);
+    });
   }
 
-  async startScene(){
+  private addSceneObject(sceneObjectConfig: SceneObjectConfig){
+
+    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(sceneObjectConfig.component);
+
+    const viewContainerRef = this.sceneObjectHost.viewContainerRef;
+
+    const componentRef = viewContainerRef.createComponent(componentFactory);
+    //(<SceneObjectComponent>componentRef.instance).data = result.data;
+
+    this.sceneService.addUIElement(componentRef.location, sceneObjectConfig.position, sceneObjectConfig.anchor);
+  }
+
+  private async startScene(){
 
     await this.delay(1000); 
     
-    const video: HTMLVideoElement = this.videoElement.nativeElement;
+    const video: HTMLVideoElement = this.video.nativeElement;
+    video
 
-    // this.sceneService.createWebGLScene(this.canvasElement.nativeElement,
-    //   video.clientWidth,
-    //   video.clientHeight );
-
-    this.sceneService.createCSS3DScene(this.containerElement, video.clientWidth, video.clientHeight);
-
-    this.sceneService.attachDOMToCSS3DRenderer(this.contentHost);  
-
+    this.sceneService.createScene(this.container, video.clientWidth, video.clientHeight);
+    this.sceneService.AddSampleBoxToScene();
+    this.onSceneReady.emit(true);
     this.sceneService.update();
   }
 
   private delay(ms: number) {
     return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  @HostListener('document:click', ['$event', '$event.target'])
+  onClick(event: any, targetElement: HTMLElement): void {
+      const video: HTMLVideoElement = this.video.nativeElement;
+      let x = ( event.layerX / video.clientWidth ) * 2 - 1;
+      let y = - ( event.layerY / video.clientHeight ) * 2 + 1;
+      this.sceneService.launchRay(x, y);
   }
 
 }

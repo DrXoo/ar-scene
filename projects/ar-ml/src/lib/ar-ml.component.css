@@ -13,26 +13,8 @@ video {
     left:0;
     right:0;
 
+    z-index: 0;
     width:100%;
-}
-
- .ui-canvas{
-    /* position:absolute;
-    top: 0;
-    left: 0; */
-
-    background-color: red!important;
-/*     
-    z-index: 20;
-    width:100%; */
-}
-
-h1{
-    background-color: blue;
-}
-
-div.pepa{
-    background-color: yellow;
 }
 
 :host{

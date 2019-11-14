@@ -22,26 +22,28 @@ export class UIPositionHelper {
              containerSize: Vector2,
              uiObjectSize: Vector2,
              anchorType: AnchorType) : void{
+        let offsetX = containerSize.x - uiObjectSize.x;
+        let offsetY = containerSize.y - uiObjectSize.y;
         switch(anchorType){
             case AnchorType.LEFT:
-                position.set(containerSize.x / 2,0,0);
-                pivot.set(-containerSize.x / 2,0,0);
+                position.set(uiObjectSize.x / 2,0,0);
+                pivot.set(-uiObjectSize.x / 2 - offsetX / 2,0,0);
                 break;
             case AnchorType.RIGHT:
-                position.set(-containerSize.x /2 ,0,0);
-                pivot.set(containerSize.x / 2,0,0);
+                position.set(-uiObjectSize.x / 2 ,0,0);
+                pivot.set(uiObjectSize.x / 2 + offsetX / 2,0,0);
                 break;
             case AnchorType.TOPLEFT:
-                position.set(containerSize.x / 2, -uiObjectSize.y / 2,0);
-                pivot.set(-containerSize.x / 2, containerSize.y / 2,0);
+                position.set(uiObjectSize.x / 2, -uiObjectSize.y / 2,0);
+                pivot.set(-uiObjectSize.x / 2 - offsetX, uiObjectSize.y / 2,0);
                 break;
             case AnchorType.BOTTOMLEFT:
-                position.set(containerSize.x / 2, +uiObjectSize.y / 2,0);
-                pivot.set(-containerSize.x / 2, -containerSize.y / 2,0);
+                position.set(containerSize.x / 2, uiObjectSize.y / 2,0);
+                pivot.set(-containerSize.x / 2 - offsetX / 2, -containerSize.y / 2 - offsetY / 2,0);
                 break;
             case AnchorType.TOPRIGHT:
                 position.set(-containerSize.x / 2, -uiObjectSize.y / 2,0);
-                pivot.set(containerSize.x / 2, containerSize.y / 2,0);
+                pivot.set(containerSize.x / 2 + offsetY / 2, containerSize.y / 2,0);
                 break;
             case AnchorType.BOTTOMRIGHT:
                 position.set(-containerSize.x / 2, uiObjectSize.y / 2,0);

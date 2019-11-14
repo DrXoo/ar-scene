@@ -1,12 +1,15 @@
 <p *ngIf=!deviceReady> No input device found. Showing test video.  </p>
 <div style="display:none">
+    <!-- <div id="loco">
+        <button (click)="clickEvent($event)" >TEST</button>
+    </div> -->
     <div #contentHost>
-        <ng-content></ng-content>
+        <ng-template SceneObject></ng-template>
     </div>
 </div>
 <div class="container" #container>
-    <video #videoElement src="./assets/test.mp4" [style.visibility]="!deviceReady ? 'visible' : 'hidden'" (play)="startScene()" controls autoplay></video>
-    <video #videoElement (play)="startScene()" [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
+    <video #videoElement src="./assets/test.mp4" [style.visibility]="!deviceReady ? 'visible' : 'hidden'" controls autoplay></video>
+    <video #videoElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
 </div>
 
 
