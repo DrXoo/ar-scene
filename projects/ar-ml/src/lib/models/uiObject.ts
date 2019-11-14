@@ -3,6 +3,7 @@ import { Group, Vector3, Vector2 } from 'three';
 import { PositionType } from '../enums/position-enum';
 import { AnchorType } from '../enums/anchor-enum';
 import { UIPositionHelper } from '../helpers/ui-position.helper';
+import { SceneObjectConfig } from './scene-object-config';
 
 export class UIObject extends Group{
 
@@ -21,9 +22,7 @@ export class UIObject extends Group{
 
     constructor(element : HTMLElement,
         sceneSize: Vector2,
-        positionType: PositionType,
-        anchorType: AnchorType,
-        updateDelegate : (object : UIObject) => void){
+        sceneObjectConfig: SceneObjectConfig){
         super();
 
         let wrapper = this.createWrapperForElement(element);
@@ -31,13 +30,13 @@ export class UIObject extends Group{
         this.isVisible = true;
 
         this.sceneSize = sceneSize;
-        this.positionType = positionType;
-        this.anchorType = anchorType;
+        this.positionType = sceneObjectConfig.position;
+        this.anchorType = sceneObjectConfig.anchor;
         this.cssObject = new CSS3DObject(wrapper);
         
         this.add(this.cssObject);
 
-        this.updateDelegate = updateDelegate;
+        this.updateDelegate = sceneObjectConfig.updateDelegate;
     }
 
     public update(){

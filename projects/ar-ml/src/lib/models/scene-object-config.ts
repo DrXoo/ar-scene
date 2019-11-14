@@ -1,7 +1,7 @@
-import { Type } from '@angular/core';
 import { PositionType } from '../enums/position-enum';
 import { AnchorType } from '../enums/anchor-enum';
+import { UIObject } from './uiObject';
 
 export class SceneObjectConfig {
-    constructor(public component: Type<any>, public position : PositionType, public anchor : AnchorType, public data: any) {}
+    constructor(public position : PositionType, public anchor : AnchorType, public updateDelegate : (object : UIObject) => void) {}
 }

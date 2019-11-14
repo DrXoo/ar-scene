@@ -4,8 +4,8 @@ import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
 import { UIObject } from '../models/uiObject';
-import { PositionType } from '../enums/position-enum';
-import { AnchorType } from '../enums/anchor-enum';
+import { SceneObjectConfig } from '../models/scene-object-config';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -25,24 +25,27 @@ export class SceneService {
     constructor(){
     }
 
-    public createScene(container: ElementRef,  width : number, height : number){
-        this.createWebGLScene(container, width, height);
-        this.createCSS3DScene(container, width, height);
+    public createScene(container: ElementRef,  width : number, height : number) : boolean{
+        try{
+            this.createWebGLScene(container, width, height);
+            this.createCSS3DScene(container, width, height);
+            return true;
+        }catch(ex){
+            return false;
+        }  
     }
 
-    public addUIElement(element: ElementRef, positionType : PositionType, anchorType : AnchorType){
+    public addUIElement(element: ElementRef, sceneObjectConfig: SceneObjectConfig) : string{
 
         let uiObject = new UIObject(
             element.nativeElement, 
             new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
-            positionType, 
-            anchorType,
-            (x) => {
-                //x.rotation.y += 0.01;
-            }
+            sceneObjectConfig
         );
 
         this.css3DScene.AddToScene(uiObject);
+
+        return uiObject.uuid;
     }
 
     public update(){

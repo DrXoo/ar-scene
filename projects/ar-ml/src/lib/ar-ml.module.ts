@@ -17,7 +17,7 @@ import { SceneObjectDirective } from './directives/scene-object.directive';
   exports: [
     ArMlComponent,
     MatCardModule, 
-    MatButtonModule
+    MatButtonModule,
   ],
   providers:[
     CameraService 

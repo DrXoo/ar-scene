@@ -3,8 +3,8 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ArMlModule } from 'ar-ml'
 import { CardExampleComponent } from './components/card-example/card-example.component';
+import { ArMlModule } from 'ar-ml'
 
 @NgModule({
   declarations: [

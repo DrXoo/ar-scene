@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SceneObjectComponent } from 'projects/ar-ml/src/public-api';
+import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-component'
 
 @Component({
   selector: 'card-example',
