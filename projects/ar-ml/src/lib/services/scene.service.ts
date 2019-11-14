@@ -1,5 +1,5 @@
 import { Injectable, ElementRef } from '@angular/core';
-import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Vector2, Raycaster, Vector3 } from 'three';
+import { PerspectiveCamera, BoxGeometry, MeshNormalMaterial, Mesh, WebGLRenderer, Vector2, Raycaster } from 'three';
 import { SceneConfig } from '../models/scene.config';
 import { SceneInstance } from '../models/scene.instance';
 import { CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer'
@@ -32,7 +32,6 @@ export class SceneService {
 
     public addUIElement(element: ElementRef, positionType : PositionType, anchorType : AnchorType){
 
-        console.log(this.css3DScene.config);
         let uiObject = new UIObject(
             element.nativeElement, 
             new Vector2(this.css3DScene.config.width, this.css3DScene.config.height),
@@ -62,7 +61,6 @@ export class SceneService {
          this.raycaster.setFromCamera({x,y}, this.webGLScene.config.camera);
          console.log(this.raycaster.intersectObjects(this.webGLScene.scene.children, true));
     }
-
     
     private createCSS3DScene(container: ElementRef,  width : number, height : number){
         const fov = 180 * ( 2 * Math.atan( height / 2 / this.UI_RENDER_PERSPECTIVE ) ) / Math.PI
@@ -78,11 +76,7 @@ export class SceneService {
             renderer: new CSS3DRenderer(),
         }
         
-        config.renderer.domElement.style.zIndex = "20";
-
-        config.renderer.domElement.style.position = "absolute";
-        config.renderer.domElement.style.top = "0";
-        config.renderer.domElement.style.left = "0";
+        this.setRendererDefaultStyle(config.renderer.domElement.style, "20");
 
         container.nativeElement.appendChild(config.renderer.domElement);
         
@@ -101,11 +95,7 @@ export class SceneService {
             renderer: new WebGLRenderer( { antialias: true, alpha: true } ),
         }
 
-        config.renderer.domElement.style.zIndex = "10";
-
-        config.renderer.domElement.style.position = "absolute";
-        config.renderer.domElement.style.top = "0";
-        config.renderer.domElement.style.left = "0";
+        this.setRendererDefaultStyle(config.renderer.domElement.style, "10");
 
         container.nativeElement.appendChild(config.renderer.domElement);
 
@@ -127,5 +117,13 @@ export class SceneService {
             width / height, 
             this.NEAREST_CAMERA_VALUE,
             this.FAREST_CAMERA_VALUE );
+    }
+
+    private setRendererDefaultStyle(style: any, zIndex: string){
+        style.zIndex = zIndex;
+
+        style.position = "absolute";
+        style.top = "0";
+        style.left = "0";
     }
 }

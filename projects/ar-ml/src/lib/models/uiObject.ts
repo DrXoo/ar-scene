@@ -6,7 +6,7 @@ import { UIPositionHelper } from '../helpers/ui-position.helper';
 
 export class UIObject extends Group{
 
-    private readonly GENERIC_USER_INTERACTION_DIV_ID: string = "loco"
+    private readonly GENERIC_USER_INTERACTION_DIV_ID: string = ""
 
     private sceneSize: Vector2;
     private cssObject: CSS3DObject;
@@ -59,7 +59,6 @@ export class UIObject extends Group{
 
     private createWrapperForElement(element : HTMLElement) : HTMLElement{
         var wrapper = document.createElement('div');
-        wrapper.appendChild(document.getElementById(this.GENERIC_USER_INTERACTION_DIV_ID))
         wrapper.appendChild(element);
 
         return wrapper;

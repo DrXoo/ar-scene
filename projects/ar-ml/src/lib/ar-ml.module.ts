@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { ArMlComponent } from './ar-ml.component';
 import { CommonModule } from '@angular/common'
-import { SceneService } from './services/scene.service';
 import { CameraService } from './services/camera.service';
 import { MatCardModule} from '@angular/material';
 import { MatButtonModule} from '@angular/material/button';
+import { SceneObjectDirective } from './directives/scene-object.directive';
 
 
 @NgModule({
-  declarations: [ArMlComponent],
+  declarations: [ArMlComponent, SceneObjectDirective],
   imports: [
     CommonModule,
     MatCardModule,
@@ -16,12 +16,12 @@ import { MatButtonModule} from '@angular/material/button';
   ],
   exports: [
     ArMlComponent,
-    MatCardModule,
+    MatCardModule, 
     MatButtonModule
   ],
   providers:[
-    SceneService,
     CameraService 
   ]
 })
-export class ArMlModule { }
+export class ArMlModule { 
+}
