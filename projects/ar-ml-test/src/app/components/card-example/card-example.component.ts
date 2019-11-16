@@ -17,6 +17,5 @@ export class CardExampleComponent implements OnInit, SceneObjectComponent {
 
   close(){
     this.objectNotificationService.onRemoveObject.emit(this.id);
-    console.log(this.id)
   }
 }

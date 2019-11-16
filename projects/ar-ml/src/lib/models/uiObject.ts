@@ -23,13 +23,11 @@ export class UIObject extends Group{
         sceneSize: Vector2,
         sceneObjectConfig: SceneObjectConfig){
         super();
-
-        let wrapper = this.createWrapperForElement(element);
-
+        
         this.sceneSize = sceneSize;
         this.positionType = sceneObjectConfig.position;
         this.anchorType = sceneObjectConfig.anchor;
-        this.cssObject = new CSS3DObject(wrapper);
+        this.cssObject = new CSS3DObject(element);
         
         this.add(this.cssObject);
 
@@ -45,12 +43,5 @@ export class UIObject extends Group{
 
     public getUserElement() : HTMLElement{
         return this.cssObject.element;
-    }
-
-    private createWrapperForElement(element : HTMLElement) : HTMLElement{
-        var wrapper = document.createElement('div');
-        wrapper.appendChild(element);
-
-        return wrapper;
     }
 }
