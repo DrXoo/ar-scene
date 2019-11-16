@@ -25,14 +25,20 @@ export class SceneService {
     constructor(){
     }
 
-    public createScene(container: ElementRef,  width : number, height : number) : boolean{
-        try{
-            this.createWebGLScene(container, width, height);
-            this.createCSS3DScene(container, width, height);
-            return true;
-        }catch(ex){
-            return false;
-        }  
+    public createScene(container: ElementRef,  width : number, height : number): Observable<boolean> {
+        const createScecneObservable = new Observable<boolean>(observer => {
+            try{
+                this.createWebGLScene(container, width, height);
+                this.createCSS3DScene(container, width, height);
+                observer.next(true);
+
+                this.update();
+            }catch(ex){
+                observer.error(ex);
+            }  
+        });
+   
+        return createScecneObservable;
     }
 
     public addUIElement(element: ElementRef, sceneObjectConfig: SceneObjectConfig) : string{
@@ -48,7 +54,16 @@ export class SceneService {
         return uiObject.uuid;
     }
 
-    public update(){
+    public removeUIElement(id: string) : boolean{
+        return this.css3DScene.RemoveFromScene(id);
+    }
+        
+    public launchRay(x : number, y : number){
+        this.raycaster.setFromCamera({x,y}, this.webGLScene.config.camera);
+        console.log(this.raycaster.intersectObjects(this.webGLScene.scene.children, true));
+   }
+
+    private update(){
         window.requestAnimationFrame(() => this.update());
 
         if(this.webGLScene){
@@ -58,11 +73,6 @@ export class SceneService {
         if(this.css3DScene){
             this.css3DScene.update();
         }
-    }
-    
-    public launchRay(x : number, y : number){
-         this.raycaster.setFromCamera({x,y}, this.webGLScene.config.camera);
-         console.log(this.raycaster.intersectObjects(this.webGLScene.scene.children, true));
     }
     
     private createCSS3DScene(container: ElementRef,  width : number, height : number){

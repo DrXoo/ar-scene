@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { CardExampleComponent } from './components/card-example/card-example.component';
 import { SceneObjectConfig } from 'projects/ar-ml/src/lib/models/scene-object-config';
 import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
@@ -15,7 +15,8 @@ import { ObjectManager } from 'projects/ar-ml/src/lib/managers/object.manager';
 })
 export class AppComponent implements OnInit {
 
-  private objectService : ObjectManager
+  private objectManager : ObjectManager;
+  private video : HTMLVideoElement;
 
   constructor(){
 
@@ -31,11 +32,12 @@ export class AppComponent implements OnInit {
 
   }
 
-  onSceneReady(objectService : ObjectManager){
-    console.log("hola");
-    this.objectService = objectService;
+  onSceneReady(sceneParameters : any){
+    console.log(sceneParameters);
+    this.objectManager = sceneParameters.ObjectManager;
+    this.video = sceneParameters.Video;
  
-    this.objectService.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.TOP, (x : UIObject) => {x.rotation.x += 0.01}));
-    this.objectService.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.BOTTOM, (x : UIObject) => {x.rotation.y += 0.01}));
+    this.objectManager.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.TOP, (x : UIObject) => {x.rotation.x += 0.01}));
+    this.objectManager.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.BOTTOM, (x : UIObject) => {x.rotation.y += 0.01}));
   }
 }

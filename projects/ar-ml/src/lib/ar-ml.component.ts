@@ -19,7 +19,7 @@ export class ArMlComponent implements OnInit {
   @ViewChild("videoElement", { static: true }) private video: ElementRef;
 
   @Output() onError: EventEmitter<string> = new EventEmitter();
-  @Output() onSceneReady: EventEmitter<ObjectManager> = new EventEmitter<ObjectManager>();
+  @Output() onSceneReady: EventEmitter<any> = new EventEmitter<any>();
 
   deviceReady: any;
 
@@ -55,31 +55,23 @@ export class ArMlComponent implements OnInit {
     })
   }
 
-  public addSceneObject(component: Type<any>, sceneObjectConfig: SceneObjectConfig) {
-
-    const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
-
-    const viewContainerRef = this.sceneObjectHost.viewContainerRef;
-
-    const componentRef = viewContainerRef.createComponent(componentFactory);
-    //(<SceneObjectComponent>componentRef.instance).data = result.data;
-
-    this.sceneService.addUIElement(componentRef.location, sceneObjectConfig);
-  }
-
   private async startScene() {
 
     await waitTime(1000);
 
     const video: HTMLVideoElement = this.video.nativeElement;
 
-    if(this.sceneService.createScene(this.container, video.clientWidth, video.clientHeight)){
-      this.sceneService.AddSampleBoxToScene();
-      this.onSceneReady.emit(this.objectManger);
-      this.sceneService.update();
-    }else{
-      this.onError.emit("Could not create scene");
-    }
+    this.sceneService.createScene(this.container, video.clientWidth, video.clientHeight)
+      .subscribe(
+        result => {
+          if (result) {
+            this.sceneService.AddSampleBoxToScene();
+            this.onSceneReady.emit({ ObjectManager: this.objectManger, Video: video });
+          }
+        },
+        error => {
+          this.onError.emit(error);
+        });
   }
 
   @HostListener('document:click', ['$event', '$event.target'])

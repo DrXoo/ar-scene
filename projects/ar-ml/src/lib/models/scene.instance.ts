@@ -18,6 +18,16 @@ export class SceneInstance {
         this.scene.add(object);
     }
 
+    public RemoveFromScene( id:string) : boolean{
+        let object = this.scene.children.find(x => x.uuid == id);
+        
+        if(object != undefined){
+            this.scene.remove(object);
+            return true;
+        }
+        return false;
+    }
+
     public update() {
   
         this.scene.children

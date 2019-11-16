@@ -7,11 +7,14 @@ import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-componen
   styleUrls: ['./card-example.component.scss']
 })
 export class CardExampleComponent implements OnInit, SceneObjectComponent {
-  data: any;
+  id: string;
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  close(){
+    console.log(this.id)
+  }
 }

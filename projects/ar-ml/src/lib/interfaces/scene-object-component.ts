@@ -1,3 +1,3 @@
 export interface SceneObjectComponent {
-    data: any;
+    id: string;
 }
