@@ -49,13 +49,17 @@ export class SceneService {
             sceneObjectConfig
         );
 
-        this.css3DScene.AddToScene(uiObject);
+        this.css3DScene.addToScene(uiObject);
 
         return uiObject.uuid;
     }
 
     public removeUIElement(id: string) : boolean{
-        return this.css3DScene.RemoveFromScene(id);
+        const uiObject = <UIObject>this.css3DScene.getObjectById(id);
+        const removedId = this.css3DScene.removeFromScene(id);
+        uiObject.getUserElement().parentNode.removeChild(uiObject.getUserElement());
+        return removedId; 
+
     }
         
     public launchRay(x : number, y : number){

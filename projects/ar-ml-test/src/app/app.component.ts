@@ -5,6 +5,7 @@ import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
 import { PositionType } from 'projects/ar-ml/src/lib/enums/position-enum';
 import { AnchorType } from 'projects/ar-ml/src/lib/enums/anchor-enum';
 import { ObjectManager } from 'projects/ar-ml/src/lib/managers/object.manager';
+import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
 
 
 
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit {
   private objectManager : ObjectManager;
   private video : HTMLVideoElement;
 
-  constructor(){
+  constructor(private objectNotificationService : ObjectNotificationService){
 
   }
 
@@ -26,10 +27,13 @@ export class AppComponent implements OnInit {
   }
 
   ngAfterViewInit(): void{
+    this.objectNotificationService.onRemoveObject.subscribe((id : string) => {
+      this.objectManager.removeUIObject(id);
+    })
   }
 
-  onSceneError(){
-
+  onSceneError(error){
+    console.log(error);
   }
 
   onSceneReady(sceneParameters : any){

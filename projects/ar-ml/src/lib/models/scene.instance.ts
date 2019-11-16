@@ -1,4 +1,4 @@
-import { Scene, Mesh } from 'three';
+import { Scene, Mesh, Object3D } from 'three';
 import { SceneConfig } from './scene.config';
 import { UIObject } from './uiObject';
 
@@ -14,18 +14,22 @@ export class SceneInstance {
         this.config.renderer.setSize(this.config.width, this.config.height);
     }
 
-    public AddToScene( object: any){
+    public addToScene( object: any){
         this.scene.add(object);
     }
 
-    public RemoveFromScene( id:string) : boolean{
-        let object = this.scene.children.find(x => x.uuid == id);
-        
+    public removeFromScene(id:string) : boolean{
+        let object = this.getObjectById(id);
+
         if(object != undefined){
             this.scene.remove(object);
             return true;
         }
         return false;
+    }
+
+    public getObjectById(id:string): Object3D{
+        return this.scene.children.find(x => x.uuid == id);
     }
 
     public update() {

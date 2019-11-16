@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-component'
+import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
 
 @Component({
   selector: 'card-example',
@@ -9,12 +10,13 @@ import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-componen
 export class CardExampleComponent implements OnInit, SceneObjectComponent {
   id: string;
 
-  constructor() { }
+  constructor(private objectNotificationService : ObjectNotificationService) { }
 
   ngOnInit() {
   }
 
   close(){
+    this.objectNotificationService.onRemoveObject.emit(this.id);
     console.log(this.id)
   }
 }

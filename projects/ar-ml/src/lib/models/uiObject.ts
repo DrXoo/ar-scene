@@ -14,7 +14,6 @@ export class UIObject extends Group{
     private updateDelegate : (object : UIObject) => void;
     private positionType: PositionType;
     private anchorType: AnchorType;
-    private isVisible: boolean;
 
     public cssObjectPosition() : Vector3 {
         return this.cssObject.position;
@@ -26,8 +25,6 @@ export class UIObject extends Group{
         super();
 
         let wrapper = this.createWrapperForElement(element);
-
-        this.isVisible = true;
 
         this.sceneSize = sceneSize;
         this.positionType = sceneObjectConfig.position;
@@ -43,17 +40,11 @@ export class UIObject extends Group{
         let cssObjectSize = new Vector2(this.cssObject.element.clientWidth, this.cssObject.element.clientHeight);
         UIPositionHelper.setPosition(this.position, this.cssObject.position, this.sceneSize, cssObjectSize, this.positionType, this.anchorType);
 
-        if(this.isVisible){
-            this.getUserElement().style.opacity = "1";
-        }else{
-            this.getUserElement().style.opacity = "0";
-        }
-
         this.updateDelegate(this);
     }
 
     public getUserElement() : HTMLElement{
-        return <HTMLElement>this.cssObject.element.children[this.cssObject.children.length];
+        return this.cssObject.element;
     }
 
     private createWrapperForElement(element : HTMLElement) : HTMLElement{
