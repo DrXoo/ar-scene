@@ -23,8 +23,9 @@ export class UIObject extends Group{
         sceneSize: Vector2,
         sceneObjectConfig: SceneObjectConfig){
         super();
-        
+
         this.sceneSize = sceneSize;
+        console.log(sceneSize);
         this.positionType = sceneObjectConfig.position;
         this.anchorType = sceneObjectConfig.anchor;
         this.cssObject = new CSS3DObject(element);
@@ -40,6 +41,13 @@ export class UIObject extends Group{
 
         this.updateDelegate(this);
     }
+
+    public setPositionFromScreen(screenX: number, screenY: number){
+        const x = (((screenX / this.sceneSize.x) * 2 ) - 1) * (this.sceneSize.x / 2);
+        const y = (((screenY / -this.sceneSize.y) * 2 ) - 1) * (-this.sceneSize.y / 2);
+        this.position.set(x,y,this.position.z);
+    }
+
 
     public getUserElement() : HTMLElement{
         return this.cssObject.element;

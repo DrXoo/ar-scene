@@ -41,7 +41,7 @@ export class SceneService {
         return createScecneObservable;
     }
 
-    public addUIElement(element: ElementRef, sceneObjectConfig: SceneObjectConfig) : string{
+    public addUIElement(element: ElementRef, sceneObjectConfig: SceneObjectConfig) : UIObject{
 
         let uiObject = new UIObject(
             element.nativeElement, 
@@ -51,7 +51,7 @@ export class SceneService {
 
         this.css3DScene.addToScene(uiObject);
 
-        return uiObject.uuid;
+        return uiObject;
     }
 
     public removeUIElement(id: string) : boolean{

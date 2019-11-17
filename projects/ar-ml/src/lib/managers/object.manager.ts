@@ -1,7 +1,8 @@
 import { SceneService, SceneObjectConfig } from '../../public-api';
-import { ComponentFactoryResolver, Type } from '@angular/core';
+import { ComponentFactoryResolver, Type, Injector } from '@angular/core';
 import { SceneObjectDirective } from '../directives/scene-object.directive';
 import { SceneObjectComponent } from '../interfaces/scene-object-component'
+import { ArBaseComponent } from '../components/ar-base/ar-base.component';
 
 export class ObjectManager {
 
@@ -17,23 +18,31 @@ export class ObjectManager {
   public addUIObject(component: Type<any>, sceneObjectConfig: SceneObjectConfig) {
 
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component);
+    const baseFactory = this.componentFactoryResolver.resolveComponentFactory(ArBaseComponent);
 
     const viewContainerRef = this.sceneObjectHost.viewContainerRef;
+    
+    const componentRef = componentFactory.create(viewContainerRef.injector);
 
-    const componentRef = viewContainerRef.createComponent(componentFactory);
+    const wrapperRef = viewContainerRef.createComponent(baseFactory, undefined, undefined, [[componentRef.location.nativeElement]] );
 
+    (<HTMLElement>wrapperRef.location.nativeElement).style.cssText = sceneObjectConfig.cssText;
 
-    let objectId = this.sceneService.addUIElement(componentRef.location, sceneObjectConfig);
+    let object = this.sceneService.addUIElement(wrapperRef.location, sceneObjectConfig);
 
-    (<SceneObjectComponent>componentRef.instance).id = objectId;
+    (<SceneObjectComponent>componentRef.instance).uiObject = object;
 
-    this.objects.push(objectId);
+    this.objects.push(object.uuid);
   }
 
   public removeUIObject(id: string) {
     if (this.sceneService.removeUIElement(id)) {
       this.removeObject(id);
     }
+  }
+
+  public toggleAnimation(id: string){
+    
   }
 
   private removeObject(id: string) {

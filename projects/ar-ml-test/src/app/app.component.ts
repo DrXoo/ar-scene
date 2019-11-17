@@ -1,13 +1,11 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
 import { CardExampleComponent } from './components/card-example/card-example.component';
-import { SceneObjectConfig } from 'projects/ar-ml/src/lib/models/scene-object-config';
 import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
 import { PositionType } from 'projects/ar-ml/src/lib/enums/position-enum';
 import { AnchorType } from 'projects/ar-ml/src/lib/enums/anchor-enum';
 import { ObjectManager } from 'projects/ar-ml/src/lib/managers/object.manager';
 import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
-
-
+import { Vector2 } from 'three';
 
 @Component({
   selector: 'app-root',
@@ -16,32 +14,51 @@ import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/objec
 })
 export class AppComponent implements OnInit {
 
-  private objectManager : ObjectManager;
-  private video : HTMLVideoElement;
+  private objectManager: ObjectManager;
+  private video: HTMLVideoElement;
+  private mousePosition: Vector2 = new Vector2();
 
-  constructor(private objectNotificationService : ObjectNotificationService){
+  constructor(private objectNotificationService: ObjectNotificationService) {
 
   }
 
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void{
-    this.objectNotificationService.onRemoveObject.subscribe((id : string) => {
+  ngAfterViewInit(): void {
+    this.objectNotificationService.onRemoveObject.subscribe((id: string) => {
       this.objectManager.removeUIObject(id);
-    })
+    });
   }
 
-  onSceneError(error){
+  onSceneError(error) {
     console.log(error);
   }
 
-  onSceneReady(sceneParameters : any){
+  onSceneReady(sceneParameters: any) {
     console.log(sceneParameters);
     this.objectManager = sceneParameters.ObjectManager;
     this.video = sceneParameters.Video;
- 
-    this.objectManager.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.TOP, (x : UIObject) => {x.rotation.x += 0.01}));
-    this.objectManager.addUIObject(CardExampleComponent, new SceneObjectConfig(PositionType.ABSOLUTE, AnchorType.BOTTOM, (x : UIObject) => {x.rotation.y += 0.01}));
+
+    this.objectManager.addUIObject(CardExampleComponent,
+      {
+        position: PositionType.ABSOLUTE,
+        anchor: AnchorType.TOP,
+        updateDelegate: (x: UIObject) => {  },
+        cssText: "width: 40%;"
+      });
+
+    this.objectManager.addUIObject(CardExampleComponent,
+      {
+        position: PositionType.ABSOLUTE,
+        anchor: AnchorType.BOTTOM,
+        updateDelegate: (x: UIObject) => {  },
+        cssText: "width: 60%;"
+      });
+  }
+
+  @HostListener('document:click', ['$event', '$event.target'])
+  onClick(event: any, targetElement: HTMLElement): void {
+    this.mousePosition.set(event.layerX, -event.layerY);
   }
 }

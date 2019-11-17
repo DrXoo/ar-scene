@@ -1,3 +1,5 @@
+import { UIObject } from '../models/uiObject';
+
 export interface SceneObjectComponent {
-    id: string;
+    uiObject: UIObject;
 }

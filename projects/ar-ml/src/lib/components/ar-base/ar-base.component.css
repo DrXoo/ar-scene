@@ -1,0 +1,14 @@
+.close{
+    transition: 0.25s ease-in;
+    transform-origin: 100%;
+    transform: scaleX(0);
+}
+.open{
+    transition: 0.25s ease-out;
+    transform-origin: 100%; 
+    transform: scaleX(1);
+}
+.navButton{
+    background-color: white;
+    float: right;
+}

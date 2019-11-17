@@ -1,0 +1,7 @@
+<div #content>
+    <ng-content></ng-content>
+</div>
+<button class="navButton" mat-mini-fab (click)="toggleAnimation()"> 
+    <mat-icon *ngIf="!isContentVisible">menu_open</mat-icon>
+    <mat-icon *ngIf="isContentVisible">chevron_right</mat-icon>
+</button>
