@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-component'
+import { SceneObjectComponent } from 'ar-ml/lib/interfaces/scene-object-component';
 import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
 @Component({
   selector: 'card-example',

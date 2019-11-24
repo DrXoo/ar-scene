@@ -1,11 +1,7 @@
-import { Component, OnInit, ElementRef, HostListener } from '@angular/core';
-import { CardExampleComponent } from './components/card-example/card-example.component';
-import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
-import { PositionType } from 'projects/ar-ml/src/lib/enums/position-enum';
-import { AnchorType } from 'projects/ar-ml/src/lib/enums/anchor-enum';
+import { Component, OnInit } from '@angular/core';
+import * as cocoSSD from '@tensorflow-models/coco-ssd';
 import { ObjectManager } from 'projects/ar-ml/src/lib/managers/object.manager';
 import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
-import { Vector2 } from 'three';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +10,18 @@ import { Vector2 } from 'three';
 })
 export class AppComponent implements OnInit {
 
+  readonly FRAME_INTERVAL_DETECT : number = 15;
+  readonly MIN_PROBABILITY_DETECT : number = 0.8;
+
   private objectManager: ObjectManager;
   private video: HTMLVideoElement;
-  private mousePosition: Vector2 = new Vector2();
+  private model: cocoSSD.ObjectDetection;
+
+  predictions: any[];
+  frameCount : number = 0;
+
 
   constructor(private objectNotificationService: ObjectNotificationService) {
-
   }
 
   ngOnInit(): void {
@@ -35,30 +37,48 @@ export class AppComponent implements OnInit {
     console.log(error);
   }
 
-  onSceneReady(sceneParameters: any) {
-    console.log(sceneParameters);
+  async onSceneReady(sceneParameters: any) {
     this.objectManager = sceneParameters.ObjectManager;
     this.video = sceneParameters.Video;
 
-    this.objectManager.addUIObject(CardExampleComponent,
-      {
-        position: PositionType.ABSOLUTE,
-        anchor: AnchorType.TOP,
-        updateDelegate: (x: UIObject) => {  },
-        cssText: "width: 40%;"
-      });
+    // this.objectManager.addUIObject(CardExampleComponent,
+    //   {
+    //     position: PositionType.ABSOLUTE,
+    //     anchor: AnchorType.TOP,
+    //     updateDelegate: (x: UIObject) => { },
+    //     cssText: "width: 80%;"
+    //   });
 
-    this.objectManager.addUIObject(CardExampleComponent,
-      {
-        position: PositionType.ABSOLUTE,
-        anchor: AnchorType.BOTTOM,
-        updateDelegate: (x: UIObject) => {  },
-        cssText: "width: 60%;"
-      });
+    // this.objectManager.addUIObject(CardExampleComponent,
+    //   {
+    //     position: PositionType.ABSOLUTE,
+    //     anchor: AnchorType.BOTTOM,
+    //     updateDelegate: (x: UIObject) => { },
+    //     cssText: "width: 60%;"
+    //   });
+
+    this.model = await cocoSSD.load({base : 'lite_mobilenet_v2'});
+
+    this.detect();
   }
 
-  @HostListener('document:click', ['$event', '$event.target'])
-  onClick(event: any, targetElement: HTMLElement): void {
-    this.mousePosition.set(event.layerX, -event.layerY);
+  private detect() {
+    if(this.frameCount == this.FRAME_INTERVAL_DETECT){
+      this.model.detect(this.video).then(predictions => {
+        predictions = predictions.filter(x => x.score > this.MIN_PROBABILITY_DETECT);
+        if(predictions.length > 0){
+          predictions.forEach(element => {
+            this.objectManager.manageArPointers(element.class, element.bbox[0], element.bbox[1], this.video.clientWidth, this.video.clientHeight);
+          });
+        }
+      }, (error) => {
+        console.error(error);
+      });
+      this.frameCount = 0;
+    }
+
+    this.frameCount++;
+
+    requestAnimationFrame(() => this.detect());
   }
 }

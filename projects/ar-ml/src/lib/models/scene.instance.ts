@@ -1,17 +1,24 @@
-import { Scene, Mesh, Object3D } from 'three';
+import { Object3D, PerspectiveCamera, Scene } from 'three';
+import { ArPointer } from './ar-pointer';
 import { SceneConfig } from './scene.config';
 import { UIObject } from './uiObject';
 
 export class SceneInstance {
 
-    public config: SceneConfig;
-
-    public scene: Scene;
+    camera: PerspectiveCamera;
+    renderer: any;
+    width: number;
+    height: number;  
+    scene: Scene;
 
     constructor(config: SceneConfig) {
-        this.config = config;
+        this.camera = config.camera;
+        this.renderer = config.renderer;
+        this.width = config.width;
+        this.height = config.height;
         this.scene = new Scene();
-        this.config.renderer.setSize(this.config.width, this.config.height);
+
+        this.renderer.setSize(this.width, this.height);
     }
 
     public addToScene( object: any){
@@ -32,20 +39,21 @@ export class SceneInstance {
         return this.scene.children.find(x => x.uuid == id);
     }
 
+    public getUIObjects() : UIObject[]{
+        return this.scene.children.filter(x => x instanceof UIObject).map(x => <UIObject>x);
+    }
+
+    public getMeshObjects() : ArPointer[]{
+        return this.scene.children.filter(x => x instanceof ArPointer).map(x => <ArPointer>x);
+    }
+
     public update() {
   
-        this.scene.children
-            .filter(x => x instanceof UIObject)
-            .forEach(x => (<UIObject>x).update())
+        this.getUIObjects().forEach(x => x.update());
 
-        this.scene.children
-            .filter(x => x instanceof Mesh)
-            .forEach(x => {
-                x.rotation.x += 0.01;
-                x.rotation.y += 0.02;
-            })
+        this.getMeshObjects().forEach(x => x.update());
 
-        this.config.renderer.render(this.scene, this.config.camera);
-        this.config.camera.updateProjectionMatrix();
+        this.renderer.render(this.scene, this.camera);
+        this.camera.updateProjectionMatrix();
     }
 }

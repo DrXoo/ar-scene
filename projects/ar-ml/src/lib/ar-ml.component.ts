@@ -1,10 +1,9 @@
-import { Component, OnInit, ElementRef, ViewChild, Output, EventEmitter, HostListener, ComponentFactoryResolver, Type } from '@angular/core';
-import { CameraService } from './services/camera.service';
-import { SceneService } from './services/scene.service';
+import { Component, ComponentFactoryResolver, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { SceneObjectDirective } from './directives/scene-object.directive';
-import { SceneObjectConfig } from './models/scene-object-config';
 import { waitTime } from './helpers/timer-helper';
 import { ObjectManager } from './managers/object.manager';
+import { CameraService } from './services/camera.service';
+import { SceneService } from './services/scene.service';
 
 
 @Component({
@@ -65,7 +64,6 @@ export class ArMlComponent implements OnInit {
       .subscribe(
         result => {
           if (result) {
-            this.sceneService.AddSampleBoxToScene();
             this.onSceneReady.emit({ ObjectManager: this.objectManger, Video: video });
           }
         },
@@ -73,13 +71,4 @@ export class ArMlComponent implements OnInit {
           this.onError.emit(error);
         });
   }
-
-  @HostListener('document:click', ['$event', '$event.target'])
-  onClick(event: any, targetElement: HTMLElement): void {
-    const video: HTMLVideoElement = this.video.nativeElement;
-    let x = (event.layerX / video.clientWidth) * 2 - 1;
-    let y = - (event.layerY / video.clientHeight) * 2 + 1;
-    this.sceneService.launchRay(x, y);
-  }
-
 }
