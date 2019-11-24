@@ -46,3 +46,4 @@ testem.log
 Thumbs.db
 
 /android
+*.mp4

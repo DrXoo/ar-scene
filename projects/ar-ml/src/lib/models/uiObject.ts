@@ -1,7 +1,7 @@
+import { Group, Vector2, Vector3 } from 'three';
 import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
-import { Group, Vector3, Vector2 } from 'three';
-import { PositionType } from '../enums/position-enum';
 import { AnchorType } from '../enums/anchor-enum';
+import { PositionType } from '../enums/position-enum';
 import { UIPositionHelper } from '../helpers/ui-position.helper';
 import { SceneObjectConfig } from './scene-object-config';
 
@@ -25,7 +25,7 @@ export class UIObject extends Group{
         super();
 
         this.sceneSize = sceneSize;
-        console.log(sceneSize);
+
         this.positionType = sceneObjectConfig.position;
         this.anchorType = sceneObjectConfig.anchor;
         this.cssObject = new CSS3DObject(element);
