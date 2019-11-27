@@ -5,6 +5,5 @@
     </div>
 </div>
 <div class="container" #container>
-    <video #videoElement src="./assets/testStreet.mp4" [style.visibility]="!deviceReady ? 'visible' : 'hidden'" controls autoplay></video>
     <video #videoElement [style.visibility]="deviceReady ? 'visible' : 'hidden'"></video>
 </div>

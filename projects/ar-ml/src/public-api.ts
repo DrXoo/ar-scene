@@ -4,7 +4,7 @@
 
 export * from './lib/ar-ml.component';
 export * from './lib/ar-ml.module';
-export * from './lib/interfaces/scene-object-component';
+export * from './lib/interfaces/ar-component';
 export * from './lib/services/scene.service'
 export * from './lib/models/scene-object-config'
 export * from './lib/models/uiObject'

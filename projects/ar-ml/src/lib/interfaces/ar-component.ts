@@ -1,5 +1,5 @@
 import { UIObject } from '../models/uiObject';
 
-export interface SceneObjectComponent {
+export interface ArComponent {
     uiObject: UIObject;
 }
