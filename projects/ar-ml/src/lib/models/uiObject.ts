@@ -3,8 +3,8 @@ import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
 import { AnchorType } from '../enums/anchor-enum';
 import { PositionType } from '../enums/position-enum';
 import { UIPositionHelper } from '../helpers/ui-position.helper';
-import { ArUIConfig } from './scene-object-config';
 import { ObjectManager } from '../managers/object.manager';
+import { ArUIConfig } from './at-ui-config';
 
 export class UIObject extends Group {
 

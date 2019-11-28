@@ -1,6 +1,5 @@
 import { ComponentFactoryResolver, ElementRef, Type } from '@angular/core';
 import { CircleGeometry, Color, MeshBasicMaterial, Vector2, Vector3 } from 'three';
-import { ArUIConfig, SceneService, UIObject } from '../../public-api';
 import { ArBaseComponent } from '../components/ar-base/ar-base.component';
 import { SceneObjectDirective } from '../directives/scene-object.directive';
 import { PositionType } from '../enums/position-enum';
@@ -8,6 +7,9 @@ import { ScreenToWorldPoint } from '../helpers/vector-helper';
 import { ArComponent } from '../interfaces/ar-component';
 import { ArPointer } from '../models/ar-pointer';
 import { ArTrackConfig } from '../models/ar-track.config';
+import { SceneService } from '../services/scene.service';
+import { ArUIConfig } from '../models/at-ui-config';
+import { UIObject } from '../models/uiObject';
 
 export class ObjectManager {
 
