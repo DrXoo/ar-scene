@@ -4,6 +4,8 @@ import { waitTime } from './helpers/timer-helper';
 import { ObjectManager } from './managers/object.manager';
 import { CameraService } from './services/camera.service';
 import { SceneService } from './services/scene.service';
+import { ArSceneParameters } from './models/ar-scene-parameters';
+import { ObjectNotificationService } from './services/object-notification.service';
 
 
 @Component({
@@ -18,7 +20,7 @@ export class ArMlComponent implements OnInit {
   @ViewChild("videoElement", { static: true }) private video: ElementRef;
 
   @Output() onError: EventEmitter<string> = new EventEmitter();
-  @Output() onSceneReady: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onSceneReady: EventEmitter<ArSceneParameters> = new EventEmitter<ArSceneParameters>();
 
   deviceReady: any;
 
@@ -27,12 +29,13 @@ export class ArMlComponent implements OnInit {
   constructor(
     private cameraService: CameraService,
     private sceneService: SceneService,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private objectNotificationService: ObjectNotificationService
   ) {
   }
 
   ngOnInit() {
-    this.objectManger = new ObjectManager(this.sceneService, this.componentFactoryResolver, this.sceneObjectHost);
+    this.objectManger = new ObjectManager(this.sceneService, this.componentFactoryResolver, this.sceneObjectHost, this.objectNotificationService);
   }
 
   ngAfterViewInit() {

@@ -9,11 +9,10 @@ import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
 })
 export class CardExampleComponent implements OnInit, ArComponent {
   uiObject: UIObject;
-
   className: string;
+  objectNotificationService: ObjectNotificationService;
 
-
-  constructor(private objectNotificationService : ObjectNotificationService) { }
+  constructor() { }
 
   ngOnInit() {
   }

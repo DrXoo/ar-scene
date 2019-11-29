@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import * as cocoSSD from '@tensorflow-models/coco-ssd';
 import { ObjectManager } from 'projects/ar-ml/src/lib/managers/object.manager';
-import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
 import { ArTrackConfig } from 'projects/ar-ml/src/lib/models/ar-track.config';
 import { CardExampleComponent } from './components/card-example/card-example.component';
+import { ArSceneParameters } from 'projects/ar-ml/src/lib/models/ar-scene-parameters';
 
 @Component({
   selector: 'app-root',
@@ -20,33 +20,22 @@ export class AppComponent implements OnInit {
 
   predictions: any[];
 
-  constructor(private objectNotificationService: ObjectNotificationService) {
+  constructor() {
   }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-    this.objectNotificationService.onRemoveObject.subscribe((id: string) => {
-      this.objectManager.removeUIObject(id);
-    });
   }
 
   onSceneError(error) {
     console.log(error);
   }
 
-  async onSceneReady(sceneParameters: any) {
+  async onSceneReady(sceneParameters: ArSceneParameters) {
     this.objectManager = sceneParameters.ObjectManager;
     this.video = sceneParameters.Video;
-
-    // this.objectManager.addUIObject(CardExampleComponent,
-    //   {
-    //     position: PositionType.ABSOLUTE,
-    //     anchor: AnchorType.TOP,
-    //     updateDelegate: (x: UIObject) => { },
-    //     cssText: "width: 80%;"
-    //   });
 
     this.model = await cocoSSD.load({ base: 'lite_mobilenet_v2' });
 
@@ -78,14 +67,13 @@ export class AppComponent implements OnInit {
 
   @HostListener('document:click', ['$event', '$event.target'])
   onClick(event: any, targetElement: HTMLElement): void {
-    // console.log("Click!");
-    // this.objectManager.manageUIObjects(CardExampleComponent,
-    //   <ArTrackConfig>{
-    //     x: event.layerX,
-    //     y: event.layerY,
-    //     width: this.video.clientWidth,
-    //     height: this.video.clientHeight,
-    //     key: 'pepa'
-    //   })
+    this.objectManager.manageUIObjects(CardExampleComponent,
+      <ArTrackConfig>{
+        x: event.layerX,
+        y: event.layerY,
+        width: this.video.clientWidth,
+        height: this.video.clientHeight,
+        key: 'test'
+      })
   }
 }

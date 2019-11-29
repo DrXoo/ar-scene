@@ -10,6 +10,7 @@ import { ArTrackConfig } from '../models/ar-track.config';
 import { SceneService } from '../services/scene.service';
 import { ArUIConfig } from '../models/at-ui-config';
 import { UIObject } from '../models/uiObject';
+import { ObjectNotificationService } from '../services/object-notification.service';
 
 export class ObjectManager {
 
@@ -21,7 +22,8 @@ export class ObjectManager {
 
   constructor(private sceneService: SceneService,
     private componentFactoryResolver: ComponentFactoryResolver,
-    private sceneObjectHost: SceneObjectDirective
+    private sceneObjectHost: SceneObjectDirective,
+    private objectNotificationService: ObjectNotificationService
   ) {
 
   }
@@ -42,6 +44,8 @@ export class ObjectManager {
     let object = this.addUIElement(wrapperRef.location, sceneObjectConfig);
 
     (<ArComponent>componentRef.instance).uiObject = object;
+    (<ArComponent>componentRef.instance).objectNotificationService = this.objectNotificationService;
+    (<ArComponent>componentRef.instance).className = sceneObjectConfig.key;
 
     this.objects.push(object.uuid);
   }
