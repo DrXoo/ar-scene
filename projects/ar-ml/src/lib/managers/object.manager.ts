@@ -25,7 +25,9 @@ export class ObjectManager {
     private sceneObjectHost: SceneObjectDirective,
     private objectNotificationService: ObjectNotificationService
   ) {
-
+    this.objectNotificationService.onRemoveObject.subscribe(x => {
+      this.removeUIObject(x);
+    })
   }
 
   public addUIObject(component: Type<any>, sceneObjectConfig: ArUIConfig) {
