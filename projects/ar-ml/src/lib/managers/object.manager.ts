@@ -45,9 +45,12 @@ export class ObjectManager {
 
     let object = this.addUIElement(wrapperRef.location, sceneObjectConfig);
 
-    (<ArComponent>componentRef.instance).uiObject = object;
-    (<ArComponent>componentRef.instance).objectNotificationService = this.objectNotificationService;
-    (<ArComponent>componentRef.instance).className = sceneObjectConfig.key;
+    let componentInstance = (<ArComponent>componentRef.instance);
+    componentInstance.uiObject = object;
+    componentInstance.objectNotificationService = this.objectNotificationService;
+    componentInstance.className = sceneObjectConfig.key;
+
+    componentRef.changeDetectorRef.detectChanges();
 
     this.objects.push(object.uuid);
   }

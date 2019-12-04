@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { ObjectNotificationService } from 'projects/ar-ml/src/lib/services/object-notification.service';
 import { ArComponent } from 'projects/ar-ml/src/lib/interfaces/ar-component';
 import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
@@ -9,10 +9,11 @@ import { UIObject } from 'projects/ar-ml/src/lib/models/uiObject';
 })
 export class CardExampleComponent implements OnInit, ArComponent {
   uiObject: UIObject;
-  className: string;
+  @Input() className: string;
   objectNotificationService: ObjectNotificationService;
 
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit() {
   }
@@ -25,6 +26,5 @@ export class CardExampleComponent implements OnInit, ArComponent {
   }
 
   testEvent(){
-    this.className = this.uiObject.key;
   }
 }
